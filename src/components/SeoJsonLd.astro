@@ -1,0 +1,59 @@
+---
+// SEO JSON-LD Schema.org component
+// Usage:
+//   <SeoJsonLd type="Organization" data={...} />
+//   <SeoJsonLd type="Product" data={...} />
+//   <SeoJsonLd type="FAQPage" data={...} />
+
+export interface OrganizationSchema {
+  '@type': 'Organization';
+  name: string;
+  url: string;
+  logo?: string;
+  sameAs?: string[];
+}
+
+export interface ProductSchema {
+  '@type': 'Product';
+  name: string;
+  description?: string;
+  image?: string;
+  brand?: { '@type': 'Brand'; name: string };
+  offers?: {
+    '@type': 'Offer';
+    price?: string;
+    priceCurrency?: string;
+    availability?: string;
+  };
+}
+
+export interface FAQItem {
+  '@type': 'Question';
+  name: string;
+  acceptedAnswer: {
+    '@type': 'Answer';
+    text: string;
+  };
+}
+
+export interface FAQPageSchema {
+  '@type': 'FAQPage';
+  mainEntity: FAQItem[];
+}
+
+type SchemaType = 'Organization' | 'Product' | 'FAQPage';
+
+interface Props {
+  type: SchemaType;
+  data: OrganizationSchema | ProductSchema | FAQPageSchema;
+}
+
+const { type, data } = Astro.props;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  ...data,
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

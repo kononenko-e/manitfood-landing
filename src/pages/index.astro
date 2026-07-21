@@ -1,8 +1,37 @@
 ---
+// Landing page SEO JSON-LD — Product / Service markup
+import SeoJsonLd from '@/components/SeoJsonLd.astro';
 import Layout from '@/layouts/Layout.astro';
+
+const organizationSchema = {
+  '@type': 'Organization' as const,
+  name: 'ManitFood',
+  url: 'https://manitfood.ru',
+  logo: 'https://manitfood.ru/logo.png',
+  sameAs: ['https://t.me/manitfood_bot'],
+};
+
+const productSchema = {
+  '@type': 'Product' as const,
+  name: 'ИИ-фуд-фотограф ManitFood',
+  description:
+    'Профессиональные фото блюд из снимков на телефон. Без фотостудии.',
+  image: 'https://manitfood.ru/og-image.jpg',
+  brand: { '@type': 'Brand' as const, name: 'ManitFood' },
+  offers: {
+    '@type': 'Offer' as const,
+    price: '0',
+    priceCurrency: 'RUB',
+    availability: 'https://schema.org/InStock',
+  },
+};
 ---
 
-<Layout>
+<Layout title="ИИ фуд-фотограф для ресторанов">
+  <SeoJsonLd type="Organization" data={organizationSchema} />
+  <SeoJsonLd type="Product" data={productSchema} />
+
+  <!-- Placeholder: заменить на реальные секции -->
   <div class="flex min-h-screen items-center justify-center">
     <h1 class="text-2xl font-bold">ManitFood Landing — placeholder</h1>
   </div>
