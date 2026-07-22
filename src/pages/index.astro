@@ -1,25 +1,35 @@
 ---
-// Landing page SEO JSON-LD — Product / Service markup
+// Лендинг «Манит» — структура по manitfood-landing-structure.md:
+// расхождение (hero → до/после → развилка → сегмент-зона) →
+// схождение (конфигуратор → тарифы → FAQ → финальный CTA).
 import SeoJsonLd from '@/components/SeoJsonLd.astro';
 import Layout from '@/layouts/Layout.astro';
-
-const BOT_URL = 'https://t.me/manitfood_bot';
+import Header from '@/components/Header.astro';
+import Hero from '@/components/Hero.astro';
+import BeforeAfter from '@/components/BeforeAfter.astro';
+import SegmentZone from '@/components/SegmentZone.astro';
+import HowItWorks from '@/components/HowItWorks.astro';
+import Pricing from '@/components/Pricing.astro';
+import Faq from '@/components/Faq.astro';
+import CtaSection from '@/components/CtaSection.astro';
+import Footer from '@/components/Footer.astro';
+import { BOT_URL, SITE_URL } from '@/lib/site';
 
 const organizationSchema = {
   '@type': 'Organization' as const,
-  name: 'ManitFood',
-  url: 'https://manitfood.ru',
-  logo: 'https://manitfood.ru/logo.png',
+  name: 'Манит (ManitFood)',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
   sameAs: [BOT_URL],
 };
 
 const productSchema = {
   '@type': 'Product' as const,
-  name: 'ИИ-фуд-фотограф ManitFood',
+  name: 'Манит — ИИ-фотостудия еды в Telegram',
   description:
-    'Профессиональные фото блюд из снимков на телефон — с помощью нейросети, без фотостудии.',
-  image: 'https://manitfood.ru/og-image.jpg',
-  brand: { '@type': 'Brand' as const, name: 'ManitFood' },
+    'Профессиональные фото блюд из снимков на телефон: студийный результат за минуты, без фотографа и реквизита. Первое фото — бесплатно.',
+  image: `${SITE_URL}/og-image.jpg`,
+  brand: { '@type': 'Brand' as const, name: 'Манит' },
   offers: {
     '@type': 'Offer' as const,
     price: '0',
@@ -27,473 +37,24 @@ const productSchema = {
     availability: 'https://schema.org/InStock',
   },
 };
-
-// 12 стилей съёмки (agent_docs/food-photo-prompt/style-concepts.md) —
-// пока без реальных сгенерированных примеров, поэтому показываем как
-// карточки-настроения (градиент = палитра стиля), а не как фейковые фото.
-const styles = [
-  { name: 'Тёмная драма', mood: 'Глубокие тени, один резкий свет', from: '#0b0b0d', to: '#3a0e10' },
-  { name: 'Светлый и воздушный', mood: 'Мягкий дневной свет, минимум лишнего', from: '#ffffff', to: '#dcd4c6' },
-  { name: 'Динамика / сплэш', mood: 'Брызги, движение, энергия кадра', from: '#1a1440', to: '#c2361b' },
-  { name: 'Флэтлей редакторский', mood: 'Идеальная раскладка сверху', from: '#efe6d8', to: '#a99770' },
-  { name: 'Домашний рустик', mood: 'Тёплый свет, живая подача', from: '#4a2f1c', to: '#c98a4b' },
-  { name: 'Fine dining редакторский', mood: 'Минимализм и негативное пространство', from: '#151312', to: '#5c4a2a' },
-  { name: 'Винтажная плёнка', mood: 'Зерно и тёплые проявленные тона', from: '#5a3a24', to: '#d8b27a' },
-  { name: 'Монохром / дуотон', mood: 'Чёрно-белая графичность', from: '#0d0d0d', to: '#9a9a9a' },
-  { name: 'Пастельная нежность', mood: 'Нежная пастельная гамма', from: '#f7d9e3', to: '#f3ecd9' },
-  { name: 'Яркий поп-арт', mood: 'Сочные насыщенные цвета', from: '#ff5f6d', to: '#ffc371' },
-  { name: 'Макро-текстура', mood: 'Крупный план на текстуру', from: '#2b1c12', to: '#a97452' },
-  { name: 'С руками / лайфстайл', mood: 'Живое действие в кадре', from: '#3a2e22', to: '#caa06a' },
-];
-
-const cafeSteps = [
-  { title: 'Загрузите фото блюда', desc: 'Снимок на телефон как есть — реквизит, свет и фон не важны, это работа нейросети.' },
-  { title: 'Выберите стиль и локацию', desc: '12 готовых стилей съёмки и локаций, можно загрузить свою для фирменного вида.' },
-  { title: 'Получите фото в 4K', desc: 'Финал — без вотермарки, готов для меню, сайта, доставки и рекламы.' },
-];
-
-const homeSteps = [
-  { title: 'Сфотографируйте, как обычно', desc: 'Тот же снимок, что и для сторис — на телефон, при своём свете.' },
-  { title: 'Выберите настроение', desc: 'От тёплого домашнего света до аккуратной студийной подачи — вы решаете.' },
-  { title: 'Заберите готовое фото', desc: 'Блюдо остаётся собой — только свет, фон и композиция становятся идеальными.' },
-];
-
-const cafeSegments = [
-  { title: 'Кафе и рестораны', desc: 'От дневного меню до вечерней подачи — единый стиль на все позиции сразу.' },
-  { title: 'Доставка готовой еды', desc: 'Карточки товара, которые не стыдно поставить рядом с крупными агрегаторами.' },
-  { title: 'Кейтеринг', desc: 'Масштаб и щедрость банкетного стола — без реальной студийной фотосессии.' },
-  { title: 'Пекарни и кофейни', desc: 'Тёплая, ремесленная подача: видно корку, пар над чашкой, текстуру теста.' },
-  { title: 'Бары и вечерние заведения', desc: 'Блики на стекле и атмосфера — от лёгкого дневного до тёмного вечернего света.' },
-];
-
-const homeSegments = [
-  { title: 'Кондитеры на дому', desc: 'Торты и капкейки на заказ — фото, которому доверяют в директе и в чате с клиентом.' },
-  { title: 'Микро-производства', desc: 'Мёд, варенье, сыры ручной работы — честная фермерская подача и текстура.' },
-  { title: 'Небольшой кейтеринг', desc: 'Растущий бизнес без бюджета на фотографа с первого же заказа.' },
-];
-
-const heavyPricing = [
-  { title: '1 фото', subtitle: 'Разовое улучшение', price: '249 ₽', per: '249 ₽/шт', badge: null },
-  { title: '5 позиций', subtitle: 'Меню', price: '990 ₽', per: '198 ₽/шт', badge: null },
-  { title: '10 позиций', subtitle: 'Меню', price: '1 790 ₽', per: '179 ₽/шт', badge: 'Популярный выбор' },
-  { title: '20 позиций', subtitle: 'Меню + 1 своя локация', price: '3 190 ₽', per: '160 ₽/шт', badge: null },
-  { title: '50 позиций', subtitle: 'Меню + 3 свои локации', price: '7 500 ₽', per: '150 ₽/шт', badge: 'Максимальная выгода' },
-];
-
-const streamPricing = [
-  { title: 'Соло', price: '290 ₽', features: ['10 фото в месяц', 'Готовые локации'], badge: null },
-  { title: 'Мастер', price: '490 ₽', features: ['20 фото в месяц', '1 своя локация в месяц'], badge: 'Популярный выбор' },
-  { title: 'Студия', price: '1 190 ₽', features: ['50 фото в месяц', '3 свои локации в месяц'], badge: null },
-];
-
-const faq = [
-  {
-    q: 'Нейросеть не исказит моё блюдо?',
-    a: 'Перед генерацией фото проходит проверку — если ракурс или качество снимка не годятся, бот сразу скажет, что переснять, ещё до какого-либо списания. Финал вы всегда подтверждаете сами: не понравилось — просто не забираете результат.',
-  },
-  {
-    q: 'Что если результат не понравится?',
-    a: 'На каждую позицию — бесплатная правка и три бесплатные перегенерации. Позиция из пакета списывается только в момент, когда вы подтвердили финал, а не за попытки.',
-  },
-  {
-    q: 'Это не будет выглядеть как «ИИ-глянец»?',
-    a: 'Для этого и есть выбор стиля — от честного домашнего света до полноценной fine-dining подачи. Стиль подбирается под ваш формат, а не один шаблон на всех.',
-  },
-  {
-    q: 'Зачем водяной знак на превью?',
-    a: 'Вотермарка стоит только на превью — это защита от того, чтобы черновики выдавали за готовый продукт. Финальное фото, которое вы забираете, всегда чистое, без вотермарки.',
-  },
-  {
-    q: 'Нужно уметь писать промпты?',
-    a: 'Нет — вы выбираете готовый стиль и локацию из галереи. Текстом можно только точечно поправить результат, например «добавь соус» или «смени тарелку».',
-  },
-  {
-    q: 'Можно использовать фото в рекламе и на маркетплейсах?',
-    a: 'Да, финальное изображение — ваше: можно использовать в меню, соцсетях, на сайте, в доставке и в рекламе.',
-  },
-  {
-    q: 'Как быстро всё происходит и как оплатить?',
-    a: 'Превью — за секунды, финал — в пределах пары минут. Оплата картой прямо в боте, тарифы — в рублях, подписку можно отменить в любой момент.',
-  },
-];
 ---
 
-<Layout title="ИИ фуд-фотограф для ресторанов и домашних кондитеров">
+<Layout
+  title="ИИ-фотостудия еды в Telegram — фото блюда с телефона как из студии"
+  description="Телеграм-бот Манит превращает снимок блюда с телефона в профессиональное фото для меню, доставки и соцсетей. Без фотографа и реквизита. Первое фото — бесплатно."
+>
   <SeoJsonLd type="Organization" data={organizationSchema} />
   <SeoJsonLd type="Product" data={productSchema} />
 
-  <!-- Шапка — постоянная, все переходы по CTA ведут на финальный блок #start -->
-  <header class="navbar fixed top-0 z-50 bg-base-100/80 backdrop-blur border-b border-base-300/60 px-4 md:px-8 min-h-16">
-    <div class="flex-1">
-      <a href="#top" class="font-display text-xl font-semibold tracking-tight">ManitFood</a>
-    </div>
-    <div class="flex-none">
-      <a href="#start" class="btn btn-primary btn-sm rounded-full">Открыть бота</a>
-    </div>
-  </header>
-
-  <!-- ============ 1. ХИРО (нейтральный) ============ -->
-  <section id="top" class="relative overflow-hidden bg-base-100 pt-32 pb-24 md:pt-40 md:pb-32 scroll-mt-24">
-    <div class="mx-auto max-w-6xl px-4 md:px-8">
-      <div class="mx-auto max-w-3xl text-center">
-        <span class="badge badge-outline badge-lg mb-6 font-normal">ИИ-фотограф блюд</span>
-        <h1 class="font-display text-4xl md:text-6xl font-semibold tracking-tight leading-[1.05]">
-          Фото блюда с телефона.<br />Результат — как из фотостудии.
-        </h1>
-        <p class="mt-6 text-lg md:text-xl text-base-content/70">
-          Загрузите снимок блюда в Telegram-боте — нейросеть за пару минут сделает из него
-          профессиональное фото для меню, доставки или соцсетей. Без фотографа, реквизита и ожидания.
-        </p>
-        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="#start" class="btn btn-primary btn-lg rounded-full px-8">Открыть бота в Telegram</a>
-          <a href="#demo" class="btn btn-ghost btn-lg rounded-full px-8">Как это работает ↓</a>
-        </div>
-      </div>
-
-      <!-- Инфографика: стиль/локация + фото пользователя = готовый результат -->
-      <div class="mt-16 md:mt-20 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
-        <figure class="flex flex-col items-center gap-3">
-          <div
-            class="h-36 w-36 sm:h-44 sm:w-44 rounded-3xl shadow-lg flex items-end p-4"
-            style={`background: linear-gradient(145deg, ${styles[5].from}, ${styles[5].to})`}
-          >
-            <p class="text-white font-display text-sm leading-snug">{styles[5].name}</p>
-          </div>
-          <figcaption class="text-sm text-base-content/60">Стиль и локация</figcaption>
-        </figure>
-        <span class="font-display text-3xl text-base-content/30">+</span>
-        <figure class="flex flex-col items-center gap-3">
-          <img
-            src="/images/before/burger.jpg"
-            alt="Фото блюда с телефона"
-            class="h-36 w-36 sm:h-44 sm:w-44 rounded-3xl object-cover shadow-lg"
-          />
-          <figcaption class="text-sm text-base-content/60">Ваше фото</figcaption>
-        </figure>
-        <span class="font-display text-3xl text-base-content/30">=</span>
-        <figure class="flex flex-col items-center gap-3">
-          <img
-            src="/images/after/burger.jpg"
-            alt="Готовое фото блюда"
-            class="h-36 w-36 sm:h-44 sm:w-44 rounded-3xl object-cover shadow-lg ring-2 ring-primary/40"
-          />
-          <figcaption class="text-sm text-base-content/60">Готовое фото</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 2. STICKY ДО/ПОСЛЕ ============ -->
-  <section id="ba-section" class="relative bg-black scroll-mt-24" style="height: 300vh;">
-    <div class="sticky top-0 h-screen w-full overflow-hidden">
-      <img
-        src="/images/after/burger.jpg"
-        alt="Результат ManitFood"
-        class="absolute inset-0 h-full w-full object-cover"
-      />
-      <img
-        id="ba-before-img"
-        src="/images/before/burger.jpg"
-        alt="Фото на телефон до обработки"
-        class="ba-before absolute inset-0 h-full w-full object-cover"
-      />
-
-      <div id="ba-handle" class="absolute top-0 bottom-0 w-px bg-white/70" style="left: 0%;">
-        <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 h-11 w-11 rounded-full bg-white/95 flex items-center justify-center shadow-lg text-black text-lg">
-          ↔
-        </div>
-      </div>
-
-      <div class="absolute inset-x-0 top-8 flex justify-between px-6 md:px-12 text-white/90 text-xs md:text-sm uppercase tracking-widest">
-        <span>Результат ManitFood</span>
-        <span>Обычное фото на телефон</span>
-      </div>
-
-      <div class="absolute inset-x-0 bottom-10 text-center px-6">
-        <p class="text-white/40 text-xs">
-          Иллюстрация — реальные примеры «до / после» появятся здесь после первых генераций в боте
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 3. СЕГМЕНТ: КАФЕ / РЕСТОРАНЫ — тёмная студия ============ -->
-  <section id="segment-cafe" data-theme="black" class="bg-base-100 text-base-content py-24 md:py-32">
-    <div class="mx-auto max-w-6xl px-4 md:px-8">
-      <div class="max-w-2xl">
-        <span class="text-sm uppercase tracking-widest text-primary">Для кафе, ресторанов и доставки</span>
-        <h2 class="mt-4 font-display text-3xl md:text-5xl font-semibold leading-tight">
-          Меню и карточки блюд, которые выглядят как фотостудия — без фотостудии
-        </h2>
-        <p class="mt-5 text-lg text-base-content/70">
-          Разовая профессиональная съёмка стоит 3 000–15 000 ₽ и устаревает с каждым новым сезонным
-          блюдом. ManitFood делает студийный результат из снимка на телефон — за минуты и по цене
-          одной позиции в чеке.
-        </p>
-      </div>
-
-      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {cafeSteps.map((step, i) => (
-          <div>
-            <div class="h-10 w-10 rounded-full bg-primary/15 text-primary flex items-center justify-center font-display font-semibold">
-              {i + 1}
-            </div>
-            <h3 class="mt-4 font-display text-xl font-semibold">{step.title}</h3>
-            <p class="mt-2 text-base-content/60">{step.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <div class="mt-24">
-        <h3 class="font-display text-2xl md:text-3xl font-semibold mb-2">12 стилей съёмки</h3>
-        <p class="text-base-content/60 mb-8">Выбираются в один тап — без слов про свет и ракурсы.</p>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {styles.map((s) => (
-            <div
-              class="aspect-square rounded-2xl p-4 flex items-end"
-              style={`background: linear-gradient(145deg, ${s.from}, ${s.to})`}
-            >
-              <div>
-                <p class="text-white font-display text-sm font-medium leading-snug">{s.name}</p>
-                <p class="text-white/60 text-xs mt-1 leading-snug">{s.mood}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div class="mt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {cafeSegments.map((seg) => (
-          <div class="rounded-2xl border border-base-content/10 bg-base-content/5 p-6">
-            <h4 class="font-display text-lg font-semibold">{seg.title}</h4>
-            <p class="mt-2 text-sm text-base-content/60">{seg.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <div class="mt-20 text-center">
-        <a href="#start" class="btn btn-primary btn-lg rounded-full px-10">Открыть бота в Telegram</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 4. СЕГМЕНТ: ДОМАШНИЕ МАСТЕРА — тёплый светлый ============ -->
-  <section id="segment-home" data-theme="warm" class="bg-base-100 text-base-content py-24 md:py-32">
-    <div class="mx-auto max-w-6xl px-4 md:px-8">
-      <div class="max-w-2xl">
-        <span class="text-sm uppercase tracking-widest text-primary">Для кондитеров и домашних кулинаров</span>
-        <h2 class="mt-4 font-display text-3xl md:text-5xl font-semibold leading-tight">
-          Настоящее фото твоего торта. Просто с идеальным светом
-        </h2>
-        <p class="mt-5 text-lg text-base-content/70">
-          Не глянец и не «фотостудия» — покупатель должен узнать именно то блюдо, которое закажет.
-          ManitFood убирает случайный свет и тени с обычного снимка, оставляя блюдо настоящим.
-        </p>
-      </div>
-
-      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {homeSteps.map((step, i) => (
-          <div>
-            <div class="h-10 w-10 rounded-full bg-primary/15 text-primary flex items-center justify-center font-display font-semibold">
-              {i + 1}
-            </div>
-            <h3 class="mt-4 font-display text-xl font-semibold">{step.title}</h3>
-            <p class="mt-2 text-base-content/60">{step.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <div class="mt-20 rounded-3xl bg-base-200 p-8 md:p-12">
-        <h3 class="font-display text-2xl md:text-3xl font-semibold">
-          Фото для ленты — по подписке, а не разовой фотосессией
-        </h3>
-        <p class="mt-4 text-base-content/70 max-w-2xl">
-          Тебе не нужно одно фото на годы — тебе нужны новые кадры каждую неделю: для сторис, для
-          Авито, для нового торта на заказ. «Поток» — тот же формат, что и подписка на фоторедактор,
-          только результат выглядит как из портфолио.
-        </p>
-        <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {streamPricing.map((tier) => (
-            <div class="rounded-2xl bg-base-100 p-5 text-center">
-              <p class="font-display font-semibold">{tier.title}</p>
-              <p class="mt-1 text-2xl font-display font-semibold text-primary">{tier.price}<span class="text-sm text-base-content/50">/мес</span></p>
-              <p class="mt-2 text-xs text-base-content/60">{tier.features[0]}</p>
-            </div>
-          ))}
-        </div>
-        <a href="#pricing" class="link link-hover text-sm mt-6 inline-block">Смотреть все тарифы ↓</a>
-      </div>
-
-      <div class="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div class="rounded-2xl border border-base-content/10 p-6">
-          <p class="font-display font-semibold">Первая позиция — бесплатно</p>
-          <p class="mt-2 text-sm text-base-content/60">Пробуете результат до того, как платить.</p>
-        </div>
-        <div class="rounded-2xl border border-base-content/10 p-6">
-          <p class="font-display font-semibold">Правки без доплаты</p>
-          <p class="mt-2 text-sm text-base-content/60">1 бесплатная правка и 3 перегенерации на каждую позицию.</p>
-        </div>
-        <div class="rounded-2xl border border-base-content/10 p-6">
-          <p class="font-display font-semibold">Финал — без вотермарки</p>
-          <p class="mt-2 text-sm text-base-content/60">Метка стоит только на черновиках-превью.</p>
-        </div>
-      </div>
-
-      <div class="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {homeSegments.map((seg) => (
-          <div class="rounded-2xl bg-base-200 p-6">
-            <h4 class="font-display text-lg font-semibold">{seg.title}</h4>
-            <p class="mt-2 text-sm text-base-content/60">{seg.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <div class="mt-20 text-center">
-        <a href="#start" class="btn btn-primary btn-lg rounded-full px-10">Открыть бота в Telegram</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 5. ТАРИФЫ ============ -->
-  <section id="pricing" class="bg-base-100 py-24 md:py-32 scroll-mt-24">
-    <div class="mx-auto max-w-6xl px-4 md:px-8">
-      <div class="text-center max-w-2xl mx-auto">
-        <span class="text-sm uppercase tracking-widest text-primary">Тарифы</span>
-        <h2 class="mt-4 font-display text-3xl md:text-5xl font-semibold">
-          Прозрачные цены в рублях
-        </h2>
-        <p class="mt-4 text-base-content/70">
-          Первое фото — бесплатно. Дальше платите только за то, что реально используете.
-        </p>
-      </div>
-
-      <div role="tablist" class="tabs tabs-boxed mt-12 max-w-md mx-auto bg-base-200">
-        <input type="radio" name="pricing-tabs" role="tab" class="tab" aria-label="Разовое / Меню" checked />
-        <div role="tabpanel" class="tab-content pt-10">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {heavyPricing.map((p) => (
-              <div class={`card bg-base-100 border ${p.badge ? 'border-primary shadow-lg' : 'border-base-300'} relative`}>
-                {p.badge && (
-                  <div class="badge badge-primary absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                    {p.badge}
-                  </div>
-                )}
-                <div class="card-body items-center text-center">
-                  <h3 class="card-title font-display">{p.title}</h3>
-                  <p class="text-sm text-base-content/60">{p.subtitle}</p>
-                  <p class="mt-4 text-3xl font-display font-semibold">{p.price}</p>
-                  <p class="text-sm text-base-content/50">{p.per}</p>
-                  <a href="#start" class="btn btn-sm btn-outline btn-primary rounded-full mt-6 w-full">Выбрать</a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <input type="radio" name="pricing-tabs" role="tab" class="tab" aria-label="Поток (подписка)" />
-        <div role="tabpanel" class="tab-content pt-10">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-            {streamPricing.map((tier) => (
-              <div class={`card bg-base-100 border ${tier.badge ? 'border-primary shadow-lg' : 'border-base-300'} relative`}>
-                {tier.badge && (
-                  <div class="badge badge-primary absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                    {tier.badge}
-                  </div>
-                )}
-                <div class="card-body items-center text-center">
-                  <h3 class="card-title font-display">{tier.title}</h3>
-                  <p class="mt-2 text-3xl font-display font-semibold">
-                    {tier.price}<span class="text-sm text-base-content/50 font-sans">/мес</span>
-                  </p>
-                  <ul class="mt-4 text-sm text-base-content/60 space-y-1">
-                    {tier.features.map((f) => <li>{f}</li>)}
-                  </ul>
-                  <a href="#start" class="btn btn-sm btn-outline btn-primary rounded-full mt-6 w-full">Выбрать</a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <p class="mt-10 text-center text-sm text-base-content/50">
-        Оплата картой · Подписку можно отменить в любой момент · Никаких скрытых платежей
-      </p>
-    </div>
-  </section>
-
-  <!-- ============ 6. FAQ ============ -->
-  <section id="faq" class="bg-base-200 py-24 md:py-32 scroll-mt-24">
-    <div class="mx-auto max-w-3xl px-4 md:px-8">
-      <div class="text-center">
-        <span class="text-sm uppercase tracking-widest text-primary">Вопросы</span>
-        <h2 class="mt-4 font-display text-3xl md:text-4xl font-semibold">Частые вопросы</h2>
-      </div>
-      <div class="mt-12 space-y-3">
-        {faq.map((item) => (
-          <div class="collapse collapse-plus bg-base-100 border border-base-300 rounded-2xl">
-            <input type="checkbox" />
-            <div class="collapse-title font-medium">{item.q}</div>
-            <div class="collapse-content text-base-content/70">
-              <p>{item.a}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 7. ФИНАЛЬНЫЙ CTA — переход в бота ============ -->
-  <section id="start" data-theme="black" class="bg-base-100 text-base-content py-28 md:py-36 scroll-mt-24">
-    <div class="mx-auto max-w-3xl px-4 md:px-8 text-center">
-      <h2 class="font-display text-3xl md:text-5xl font-semibold leading-tight">
-        Первое фото — бесплатно.<br />Дальше решите сами, нужно ли больше
-      </h2>
-      <p class="mt-5 text-lg text-base-content/70">
-        Бот сам спросит, что вы готовите, предложит стиль и сделает фото за пару минут.
-        Карта не нужна, чтобы попробовать.
-      </p>
-      <div class="mt-10">
-        <a href={BOT_URL} target="_blank" rel="noopener" class="btn btn-primary btn-lg rounded-full px-12">
-          Открыть бота в Telegram →
-        </a>
-      </div>
-      <p class="mt-6 text-sm text-base-content/50">
-        Без карты для пробы · Оплата и тарифы — прямо в боте
-      </p>
-    </div>
-  </section>
-
-  <footer class="bg-base-100 border-t border-base-300 py-10">
-    <div class="mx-auto max-w-6xl px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-base-content/50">
-      <span>© 2026 ManitFood</span>
-      <a href={BOT_URL} target="_blank" rel="noopener" class="link link-hover">t.me/manitfood_bot</a>
-    </div>
-  </footer>
-
-  <script>
-    function initBeforeAfter() {
-      const section = document.getElementById('ba-section');
-      const before = document.getElementById('ba-before-img');
-      const handle = document.getElementById('ba-handle');
-      if (!section || !before) return;
-
-      function update() {
-        const rect = section.getBoundingClientRect();
-        const total = rect.height - window.innerHeight;
-        const scrolled = -rect.top;
-        let progress = total > 0 ? scrolled / total : 0;
-        progress = Math.min(1, Math.max(0, progress));
-        const pct = (progress * 100).toFixed(2) + '%';
-        before.style.setProperty('--reveal', pct);
-        if (handle) handle.style.left = pct;
-      }
-
-      document.addEventListener('scroll', update, { passive: true });
-      window.addEventListener('resize', update);
-      update();
-    }
-
-    initBeforeAfter();
-  </script>
+  <Header />
+  <main>
+    <Hero />
+    <BeforeAfter />
+    <SegmentZone />
+    <HowItWorks />
+    <Pricing />
+    <Faq />
+    <CtaSection />
+  </main>
+  <Footer />
 </Layout>

@@ -1,0 +1,147 @@
+---
+import { BOT_URL, CTA_LABEL } from '@/lib/site';
+
+// §6. Режимы и тарифы — единый блок, единственный источник правды о режимах.
+// Оба режима доступны всем сегментам, можно комбинировать.
+
+const menuPackages = [
+  { title: '5 позиций', price: '990 ₽', per: '198 ₽ / кадр', note: null, featured: false },
+  { title: '10 позиций', price: '1 790 ₽', per: '179 ₽ / кадр', note: null, featured: true },
+  { title: '20 позиций', price: '3 190 ₽', per: '160 ₽ / кадр', note: '+ 1 своя локация', featured: false },
+  { title: '50 позиций', price: '7 500 ₽', per: '150 ₽ / кадр', note: '+ 3 свои локации', featured: false },
+];
+
+const streamTiers = [
+  { title: 'Соло', price: '290 ₽', features: ['10 фото в месяц', 'Готовые локации'], featured: false },
+  { title: 'Мастер', price: '490 ₽', features: ['20 фото в месяц', '1 своя локация в месяц'], featured: true },
+  { title: 'Студия', price: '1 190 ₽', features: ['50 фото в месяц', '3 свои локации в месяц'], featured: false },
+];
+---
+
+<section id="pricing" class="scroll-mt-20 bg-base-100 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl px-4 md:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-semibold tracking-tight md:text-[2.5rem]">
+        Выберите задачу — режимы доступны всем
+      </h2>
+      <p class="mt-4 text-base-content/70">
+        «Меню» — эталонные кадры для каталога и печати. «Поток» — ежедневный контент для ленты.
+        Это разные задачи, а не разное качество. Их можно комбинировать.
+      </p>
+    </div>
+
+    <div role="tablist" class="tabs tabs-boxed mx-auto mt-10 w-fit bg-base-200 font-medium">
+      <input type="radio" name="pricing-tabs" id="tab-menu" role="tab" class="tab px-6" aria-label="Меню" aria-controls="panel-menu" checked />
+      <input type="radio" name="pricing-tabs" id="tab-stream" role="tab" class="tab px-6" aria-label="Поток · подписка" aria-controls="panel-stream" />
+    </div>
+
+    <div id="panel-menu" class="pricing-panel pt-8" role="tabpanel" aria-label="Тарифы режима «Меню»">
+        <p class="mx-auto max-w-2xl text-center text-sm text-base-content/70">
+          Эталонные фото позициями и пакетами — печатное качество для меню, сайта и агрегаторов.
+          Вход — от одной генерации, качество одинаковое везде.
+        </p>
+
+        <div class="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2.8fr)]">
+          <!-- лёгкий вход: одна генерация -->
+          <div class="flex flex-col justify-between rounded-sm border border-base-300 bg-base-200 p-5">
+            <div>
+              <h3 class="text-lg font-semibold">1 фото</h3>
+              <p class="mt-1 text-sm text-base-content/70">Разовая генерация — то же качество, что и в пакетах.</p>
+            </div>
+            <div class="mt-6">
+              <p class="font-mono text-3xl font-bold">249 ₽</p>
+              <p class="mt-1 font-mono text-xs font-medium tracking-widest text-base-content/60">249 ₽ / кадр</p>
+            </div>
+          </div>
+
+          <!-- пакеты -->
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {menuPackages.map((p) => (
+              <div
+                class={`relative flex flex-col justify-between rounded-sm border p-5 ${
+                  p.featured
+                    ? 'border-2 border-primary bg-base-100 shadow-frame-warm'
+                    : 'border-base-300 bg-base-100'
+                }`}
+              >
+                {p.featured && (
+                  <span class="badge badge-primary absolute -top-3 left-4 rounded-none font-mono text-xs font-medium uppercase tracking-widest">
+                    выгоднее всего
+                  </span>
+                )}
+                <div>
+                  <h3 class="text-lg font-semibold">{p.title}</h3>
+                  {p.note && <p class="mt-1 text-sm text-base-content/70">{p.note}</p>}
+                </div>
+                <div class="mt-6">
+                  <p class="font-mono text-3xl font-bold">{p.price}</p>
+                  <p class="mt-1 font-mono text-xs font-medium tracking-widest text-base-content/60">{p.per}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+    </div>
+
+    <div id="panel-stream" class="pricing-panel hidden pt-8" role="tabpanel" aria-label="Тарифы режима «Поток»">
+        <p class="mx-auto max-w-2xl text-center text-sm text-base-content/70">
+          Подписка для ежедневных сторис, постов и Авито — быстрее и дешевле за кадр.
+          Другая задача: скорость и «настоящий» вид, а не печатный каталог.
+        </p>
+
+        <div class="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3">
+          {streamTiers.map((t) => (
+            <div
+              class={`relative flex flex-col justify-between rounded-sm border p-5 ${
+                t.featured
+                  ? 'border-2 border-primary bg-base-100 shadow-frame-warm'
+                  : 'border-base-300 bg-base-100'
+              }`}
+            >
+              {t.featured && (
+                <span class="badge badge-primary absolute -top-3 left-4 rounded-none font-mono text-xs font-medium uppercase tracking-widest">
+                  выгоднее всего
+                </span>
+              )}
+              <div>
+                <h3 class="text-lg font-semibold">{t.title}</h3>
+                <ul class="mt-2 space-y-1 text-sm text-base-content/70">
+                  {t.features.map((f) => <li>{f}</li>)}
+                </ul>
+              </div>
+              <p class="mt-6 font-mono text-3xl font-bold">
+                {t.price}<span class="text-sm font-medium text-base-content/60"> /мес</span>
+              </p>
+            </div>
+          ))}
+        </div>
+    </div>
+
+    <!-- reassurance-плашка у точки решения (контраст — читаемый, не полупрозрачный) -->
+    <div class="mx-auto mt-10 max-w-2xl rounded-sm border border-base-300 bg-base-200 px-5 py-4 text-center">
+      <p class="font-mono text-sm font-medium text-base-content">
+        первое фото — бесплатно, без карты · отмена подписки в любой момент
+      </p>
+      <p class="mt-1.5 text-sm text-base-content/70">
+        При регистрации в боте даётся одна бесплатная генерация в режиме «Меню» — как тест качества.
+      </p>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a href={BOT_URL} target="_blank" rel="noopener" class="btn btn-primary btn-lg rounded-full px-10 shadow-shutter">
+        {CTA_LABEL}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Переключение панелей без JS: :has() на секции.
+     Браузеры без :has() показывают панель «Меню» (дефолт). */
+  #pricing:has(#tab-stream:checked) #panel-menu {
+    display: none;
+  }
+  #pricing:has(#tab-stream:checked) #panel-stream {
+    display: block;
+  }
+</style>
