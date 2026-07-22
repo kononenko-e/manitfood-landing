@@ -6,3 +6,5 @@ dist
 .DS_Store
 .vscode/
 .idea/
+# git worktrees (эфемерные — не коммитить как gitlink)
+.claude/worktrees/
