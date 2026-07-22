@@ -44,8 +44,7 @@ const segments = [
 <!-- §3. Развилка — master-мир -->
 <section id="segments" class="bg-base-100 pt-24 pb-14 md:pt-32">
   <div class="mx-auto max-w-6xl px-4 md:px-8">
-    <p class="caption-label text-base-content/60">развилка · <span class="font-mono">шаг 1/1</span></p>
-    <h2 class="mt-4 max-w-2xl text-3xl font-semibold tracking-tight md:text-[2.5rem] md:leading-tight">
+    <h2 class="max-w-2xl text-3xl font-semibold tracking-tight md:text-[2.5rem] md:leading-tight">
       Что вы делаете? Покажем, как это работает именно для вас
     </h2>
 
@@ -89,10 +88,10 @@ const segments = [
           data-inactive={i === 0 ? undefined : ''}
         >
           <div>
-            <p class="caption-label text-primary">
-              {s.id === 'cafe' ? 'для заведений и бизнеса' : 'для дома и малого бренда'}
-            </p>
-            <h3 class="mt-4 text-2xl font-semibold leading-tight tracking-tight md:text-4xl">{s.painTitle}</h3>
+            <span class="badge badge-primary rounded-none font-mono text-xs font-medium uppercase tracking-widest">
+              {s.id === 'cafe' ? 'заведениям и бизнесу' : 'дому и малому бренду'}
+            </span>
+            <h3 class="mt-5 text-2xl font-semibold leading-tight tracking-tight md:text-4xl">{s.painTitle}</h3>
             <p class="mt-5 text-base-content/70 md:text-lg">{s.pain}</p>
             <p class="mt-4 text-base-content md:text-lg">{s.promise}</p>
             <a href="#how" class="btn btn-ghost mt-8 rounded-sm border border-base-300 font-medium">
