@@ -4,16 +4,80 @@
 
 @layer base {
   body {
-    @apply font-sans;
-  }
-  h1, h2, h3, h4 {
-    @apply font-display;
+    @apply font-sans antialiased;
   }
 }
 
-/* Before/After sticky reveal — управляется инлайн-стилем --reveal из скрипта на странице.
-   "before" клипуется слева направо: --reveal растёт при скролле, "после" открывается слева. */
+@layer utilities {
+  /* подпись «под кадром на контрольном листе» — чуть шире трекинг (DESIGN §3) */
+  .caption-label {
+    @apply font-medium text-[0.8125rem] uppercase tracking-[0.14em];
+  }
+}
+
+/* ===== §2 Живое до/после: скролл-reveal сверху вниз =====
+   --reveal (0–100%) выставляет скрипт; «до» клипуется сверху,
+   открывая «после». Без JS (html без .js) — статичная пара side-by-side. */
 .ba-before {
-  clip-path: inset(0 0 0 var(--reveal, 0%));
+  clip-path: inset(var(--reveal, 0%) 0 0 0);
 }
 
+html.js .ba-fallback {
+  display: none;
+}
+html:not(.js) .ba-scene {
+  display: none;
+}
+
+/* prefers-reduced-motion: скролл-джекинг отключается — показываем статичную пару */
+@media (prefers-reduced-motion: reduce) {
+  .ba-scene {
+    display: none;
+  }
+  html.js .ba-fallback {
+    display: block;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ===== §4 Морфинг сегмент-зоны =====
+   Тема меняется через data-theme на секции; морфятся цвета поверхностей и текста.
+   Геометрия компонентов при переходе неизменна (DESIGN §4). */
+.morph-zone,
+.morph-zone .morph-surface {
+  transition:
+    background-color 0.6s ease,
+    border-color 0.6s ease,
+    color 0.6s ease;
+}
+
+.segment-content {
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.segment-content[data-inactive] {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morph-zone,
+  .morph-zone .morph-surface,
+  .segment-content,
+  .config-result img {
+    transition: none !important;
+  }
+}
+
+/* ===== §5 Конфигуратор: кроссфейд результата ===== */
+.config-result img {
+  transition: opacity 0.35s ease;
+}
+.config-result img[data-hidden] {
+  opacity: 0;
+}

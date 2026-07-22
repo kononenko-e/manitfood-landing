@@ -44,17 +44,20 @@ const jsonLd = {
 ---
 
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth">
+<html lang="ru" class="scroll-smooth" data-theme="manit">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Маркер работающего JS: без него секции с JS-поведением показывают статичный fallback -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
 
     <!-- Preconnect / DNS-prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href={import.meta.env.PUBLIC_CDN_URL || ''} />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap"
       rel="stylesheet"
     />
 
@@ -66,7 +69,7 @@ const jsonLd = {
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     {!noindex && <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />}
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#FAFAF7" />
 
     <!-- Canonical -->
     <link rel="canonical" href={canonicalUrl} />

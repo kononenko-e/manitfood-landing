@@ -1,0 +1,15 @@
+---
+import { BOT_URL } from '@/lib/site';
+---
+
+<!-- §9. Footer: плоский, минимум декора -->
+<footer class="border-t border-base-300 bg-base-100 py-10">
+  <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 text-sm text-base-content/60 sm:flex-row md:px-8">
+    <span class="font-mono">© 2026 манит</span>
+    <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2" aria-label="Контакты и документы">
+      <a href={BOT_URL} target="_blank" rel="noopener" class="link-hover link">t.me/manitfood_bot</a>
+      <a href="mailto:hello@manitfood.ru" class="link-hover link">hello@manitfood.ru</a>
+      <span class="text-base-content/40">Оферта и политика — после запуска оплаты</span>
+    </nav>
+  </div>
+</footer>
