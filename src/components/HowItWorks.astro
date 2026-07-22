@@ -1,10 +1,15 @@
 ---
 import { BOT_URL, CTA_LABEL } from '@/lib/site';
 
-// §5. Конфигуратор: блюдо × стиль × локация → готовый кадр.
-// Пока нет предгенерированного набора комбинаций (structure §8) — результат
-// меняется по блюду, стиль/локация дают превью-эффект (фильтр/подложка)
-// с явным дисклеймером. Набор фиксирован: 5 × 4 × 3.
+// §5. Конфигуратор «Соберите кадр сами».
+// Три вертикальные карусели (фото × стиль × локация) листаются кнопками ▲/▼.
+// По «Посмотреть результат» карусели съезжаются к центру, а готовый кадр
+// собирается из блюра — это генерация, не съёмка (мы не фоткаем, а генерируем).
+// Тема секции наследуется от выбора в сегмент-зоне («Что вы делаете?»).
+//
+// Набор фиксирован: 5 × 4 × 3. Пока нет предгенерированного набора комбинаций
+// (structure §8) — итоговый кадр меняется по блюду, стиль/локация дают
+// превью-эффект (фильтр/подложка) с честным дисклеймером.
 
 const dishes = [
   { id: 'burger', name: 'Бургер' },
@@ -16,124 +21,190 @@ const dishes = [
 
 const styles = [
   { id: 'drama', name: 'Тёмная драма', from: '#0B0B0D', to: '#3A0E10' },
-  { id: 'airy', name: 'Светлый и воздушный', from: '#FFFFFF', to: '#DCD4C6' },
+  { id: 'airy', name: 'Светлый и воздушный', from: '#F3F1EA', to: '#CFC6B4' },
   { id: 'rustic', name: 'Домашний рустик', from: '#4A2F1C', to: '#C98A4B' },
   { id: 'fine', name: 'Fine dining', from: '#151312', to: '#5C4A2A' },
 ];
 
 const locations = [
-  { id: 'studio', name: 'Студия' },
-  { id: 'marble', name: 'Мрамор' },
-  { id: 'wood', name: 'Дерево' },
+  { id: 'studio', name: 'Студия', mat: 'linear-gradient(145deg, #26282E, #15161A)' },
+  { id: 'marble', name: 'Мрамор', mat: 'linear-gradient(145deg, #EEEDEB, #C9C8C4)' },
+  { id: 'wood', name: 'Дерево', mat: 'linear-gradient(145deg, #6B4A2E, #3C2718)' },
 ];
+
+const cols = ['left', 'center', 'right'];
 ---
 
-<section id="how" class="scroll-mt-20 bg-base-200 py-20 md:py-28">
-  <div class="mx-auto max-w-6xl px-4 md:px-8">
+<section
+  id="how"
+  data-theme="studio-dark"
+  class="morph-zone config-section scroll-mt-20 bg-base-200 py-20 md:py-28"
+>
+  <div class="mx-auto max-w-5xl px-4 md:px-8">
     <div class="max-w-2xl">
       <h2 class="text-3xl font-semibold tracking-tight md:text-[2.5rem] md:leading-tight">
         Соберите кадр сами — прямо здесь
       </h2>
       <p class="mt-4 text-base-content/70">
-        Три выбора, пара минут — и вы управляете результатом. В боте всё точно так же.
+        Выберите фото, стиль и локацию — и посмотрите готовый кадр. В боте всё точно так же.
       </p>
     </div>
 
-    <div class="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-10">
-      <!-- Шаги (плотная раскладка — DESIGN §5) -->
-      <div class="space-y-7">
-        <fieldset>
-          <legend class="flex items-baseline gap-3">
-            <span class="font-mono text-sm font-bold text-primary-content"><span class="bg-primary px-1.5 py-0.5">шаг 1/3</span></span>
-            <span class="text-lg font-semibold">Загрузите снимок</span>
-          </legend>
-          <div class="mt-3 flex gap-2 overflow-x-auto pb-1" data-config-group="dish">
-            {dishes.map((d, i) => (
-              <button
-                type="button"
-                class="config-chip group w-20 shrink-0 rounded-sm border-2 border-transparent p-1 transition-colors aria-pressed:border-primary"
-                data-value={d.id}
-                aria-pressed={i === 0 ? 'true' : 'false'}
-              >
-                <img
-                  src={`/images/before/${d.id}.jpg`}
-                  alt={`«До»: ${d.name.toLowerCase()}, снятый на телефон`}
-                  class="aspect-square w-full rounded-sm object-cover"
-                  loading="lazy"
-                  width="144"
-                  height="144"
-                />
-                <span class="mt-1 block text-center text-xs font-medium text-base-content/70 group-aria-pressed:text-base-content">{d.name}</span>
-              </button>
-            ))}
-          </div>
-        </fieldset>
+    <!-- Конфигуратор: стадия «сборка» и стадия «результат» в одном контейнере -->
+    <div id="config" class="config mt-12 md:mt-14" data-stage="build">
+      <!-- ── Стадия сборки: три вертикальные карусели ── -->
+      <div class="config-build" data-build>
+        <div class="config-carousels grid grid-cols-3 gap-2.5 sm:gap-5 md:gap-8">
+          {[
+            { key: 'dish', step: 1, title: 'Фото', items: dishes },
+            { key: 'style', step: 2, title: 'Стиль', items: styles },
+            { key: 'location', step: 3, title: 'Локация', items: locations },
+          ].map((group, gi) => (
+            <div
+              class="carousel"
+              data-config-group={group.key}
+              data-col={cols[gi]}
+              data-index="0"
+              role="group"
+              aria-label={`Шаг ${group.step} из 3: ${group.title}`}
+            >
+              <div class="carousel-head flex items-center gap-2">
+                <span class="badge-step font-mono text-[0.7rem] font-bold tracking-widest text-primary-content">
+                  <span class="bg-primary px-1.5 py-0.5">шаг {group.step}/3</span>
+                </span>
+                <span class="hidden text-sm font-semibold sm:inline">{group.title}</span>
+              </div>
 
-        <fieldset>
-          <legend class="flex items-baseline gap-3">
-            <span class="font-mono text-sm font-bold text-primary-content"><span class="bg-primary px-1.5 py-0.5">шаг 2/3</span></span>
-            <span class="text-lg font-semibold">Выберите стиль</span>
-          </legend>
-          <div class="mt-3 grid grid-cols-2 gap-2" data-config-group="style">
-            {styles.map((s, i) => (
               <button
                 type="button"
-                class="config-chip flex min-h-11 items-center gap-3 rounded-sm border-2 border-base-300 bg-base-100 px-3 py-2 text-left text-sm font-medium transition-colors aria-pressed:border-primary"
-                data-value={s.id}
-                aria-pressed={i === 0 ? 'true' : 'false'}
+                class="carousel-nav carousel-prev"
+                aria-label={`Предыдущий вариант: ${group.title.toLowerCase()}`}
               >
-                <span class="h-6 w-6 shrink-0 rounded-sm" style={`background: linear-gradient(145deg, ${s.from}, ${s.to})`} aria-hidden="true"></span>
-                {s.name}
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6" /></svg>
               </button>
-            ))}
-          </div>
-        </fieldset>
 
-        <fieldset>
-          <legend class="flex items-baseline gap-3">
-            <span class="font-mono text-sm font-bold text-primary-content"><span class="bg-primary px-1.5 py-0.5">шаг 3/3</span></span>
-            <span class="text-lg font-semibold">Локация / фон</span>
-          </legend>
-          <div class="mt-3 flex flex-wrap gap-2" data-config-group="location">
-            {locations.map((l, i) => (
+              <div class="carousel-viewport">
+                {group.key === 'dish' && dishes.map((d, i) => (
+                  <div class={`carousel-item${i === 0 ? ' is-current' : ''}`} data-value={d.id} data-i={i}>
+                    <img
+                      src={`/images/before/${d.id}.jpg`}
+                      alt={`Ваш снимок: ${d.name.toLowerCase()}, с телефона`}
+                      class="h-full w-full object-cover"
+                      loading="lazy"
+                      width="240"
+                      height="240"
+                    />
+                  </div>
+                ))}
+                {group.key === 'style' && styles.map((s, i) => (
+                  <div
+                    class={`carousel-item carousel-swatch${i === 0 ? ' is-current' : ''}`}
+                    data-value={s.id}
+                    data-i={i}
+                    style={`background: linear-gradient(150deg, ${s.from}, ${s.to})`}
+                  >
+                    <span class="swatch-ring" aria-hidden="true"></span>
+                  </div>
+                ))}
+                {group.key === 'location' && locations.map((l, i) => (
+                  <div
+                    class={`carousel-item carousel-swatch${i === 0 ? ' is-current' : ''}`}
+                    data-value={l.id}
+                    data-i={i}
+                    style={`background: ${l.mat}`}
+                  >
+                    <span class="swatch-ring" aria-hidden="true"></span>
+                  </div>
+                ))}
+              </div>
+
               <button
                 type="button"
-                class="config-chip min-h-11 rounded-sm border-2 border-base-300 bg-base-100 px-4 text-sm font-medium transition-colors aria-pressed:border-primary"
-                data-value={l.id}
-                aria-pressed={i === 0 ? 'true' : 'false'}
+                class="carousel-nav carousel-next"
+                aria-label={`Следующий вариант: ${group.title.toLowerCase()}`}
               >
-                {l.name}
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
               </button>
-            ))}
-          </div>
-        </fieldset>
+
+              <div class="carousel-foot mt-2 flex items-baseline justify-between gap-1.5">
+                <span class="carousel-name min-w-0 truncate text-xs font-semibold sm:text-sm" aria-live="polite">
+                  {group.items[0].name}
+                </span>
+                <span class="carousel-count shrink-0 font-mono text-[0.7rem] text-base-content/55">
+                  01/{String(group.items.length).padStart(2, '0')}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="config-actions mt-9 flex flex-col items-center gap-3 md:mt-11">
+          <button
+            type="button"
+            id="config-generate"
+            class="btn btn-primary btn-lg rounded-sm px-9 font-semibold shadow-frame-dark"
+          >
+            Посмотреть результат
+          </button>
+          <p class="font-mono text-xs tracking-wide text-base-content/60">
+            три выбора · готовый кадр за пару секунд
+          </p>
+        </div>
       </div>
 
-      <!-- Результат -->
-      <div class="lg:sticky lg:top-24 lg:self-start">
-        <div id="config-frame" class="config-result rounded-sm p-4 shadow-frame-warm transition-colors duration-300 md:p-6" style="background:#15161A">
-          <img
-            id="config-result-img"
-            src="/images/after/burger.jpg"
-            alt="Готовый кадр: бургер, стиль «Тёмная драма», локация «Студия»"
-            class="aspect-[4/3] w-full rounded-sm object-cover"
-            width="800"
-            height="600"
-            loading="lazy"
-          />
-        </div>
-        <p id="config-meta" class="mt-3 flex flex-wrap justify-between gap-2 font-mono text-xs font-medium tracking-widest text-base-content/60">
-          <span id="config-meta-text">бургер · тёмная драма · студия</span>
-          <span id="config-counter">кадр 01/05</span>
-        </p>
-        <p class="mt-3 text-sm text-base-content/70">
-          Превью иллюстративно: готовые комбинации «блюдо × стиль × локация» появятся после генерации набора.
-        </p>
-        <div class="mt-6 flex flex-col items-start gap-2">
-          <a href={BOT_URL} target="_blank" rel="noopener" class="btn btn-primary btn-lg rounded-full px-9 shadow-shutter">
-            {CTA_LABEL}
-          </a>
-          <p class="font-mono text-sm font-medium text-base-content/70">соберёте своё — прямо в боте, первое фото бесплатно</p>
+      <!-- ── Стадия результата: собранный кадр ── -->
+      <div class="config-result-stage" data-result hidden>
+        <div class="mx-auto max-w-xl">
+          <div class="config-frame rounded-sm border border-base-300 bg-base-100 p-3 shadow-frame-dark md:p-4">
+            <div class="config-final relative aspect-[4/3] w-full overflow-hidden rounded-sm" style="--style-filter: none">
+              <img
+                id="config-final-img"
+                class="config-final-img h-full w-full object-cover"
+                alt=""
+                width="800"
+                height="600"
+              />
+              <div
+                class="config-status absolute inset-0 flex flex-col items-center justify-center gap-2 bg-base-100/70 backdrop-blur-sm"
+                data-status
+                aria-live="polite"
+              >
+                <span class="font-mono text-sm font-medium tracking-widest text-base-content">
+                  собираем кадр…
+                </span>
+                <span class="font-mono text-2xl font-bold text-primary" data-pct>0%</span>
+              </div>
+            </div>
+            <p class="config-meta mt-3 flex flex-wrap items-baseline justify-between gap-2 font-mono text-xs font-medium tracking-widest text-base-content/60">
+              <span data-meta-text>—</span>
+              <span data-meta-count>кадр 01/05</span>
+            </p>
+          </div>
+
+          <p class="mt-3 text-sm text-base-content/65">
+            Превью иллюстративно: готовые комбинации «блюдо × стиль × локация» появятся после генерации набора.
+          </p>
+
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              data-retry
+              class="btn btn-ghost rounded-sm border border-base-300 font-medium"
+            >
+              ← Попробовать снова
+            </button>
+            <a
+              href={BOT_URL}
+              target="_blank"
+              rel="noopener"
+              class="btn btn-primary btn-lg rounded-full px-9 shadow-shutter"
+            >
+              {CTA_LABEL}
+            </a>
+          </div>
+          <p class="mt-2 font-mono text-sm font-medium text-base-content/70">
+            соберёте своё — прямо в боте, первое фото бесплатно
+          </p>
         </div>
       </div>
     </div>
@@ -141,17 +212,36 @@ const locations = [
 </section>
 
 <script>
+  type Stage = 'build' | 'reveal' | 'result';
+
   function initConfigurator() {
-    const img = document.getElementById('config-result-img') as HTMLImageElement | null;
-    const frame = document.getElementById('config-frame');
-    const metaText = document.getElementById('config-meta-text');
-    const counter = document.getElementById('config-counter');
-    if (!img || !frame || !metaText || !counter) return;
+    const section = document.getElementById('how');
+    const config = document.getElementById('config');
+    const buildEl = config?.querySelector<HTMLElement>('[data-build]');
+    const resultEl = config?.querySelector<HTMLElement>('[data-result]');
+    const generateBtn = document.getElementById('config-generate');
+    const finalImg = document.getElementById('config-final-img') as HTMLImageElement | null;
+    if (!section || !config || !buildEl || !resultEl || !generateBtn || !finalImg) return;
+
+    const statusEl = resultEl.querySelector<HTMLElement>('[data-status]');
+    const pctEl = resultEl.querySelector<HTMLElement>('[data-pct]');
+    const finalWrap = finalImg.parentElement as HTMLElement;
+    const metaText = resultEl.querySelector<HTMLElement>('[data-meta-text]');
+    const metaCount = resultEl.querySelector<HTMLElement>('[data-meta-count]');
+    const retryBtn = resultEl.querySelector<HTMLButtonElement>('[data-retry]');
+
+    // ── Тема секции наследуется от выбора сегмента в блоке «Что вы делаете?» ──
+    document.addEventListener('manit:segment', (e) => {
+      const theme = (e as CustomEvent<string>).detail;
+      if (theme) section.dataset.theme = theme;
+    });
+
+    // ── Данные ──
+    const dishOrder = ['burger', 'pasta', 'cake', 'dessert', 'bento'];
 
     const dishNames: Record<string, string> = {
       burger: 'бургер', pasta: 'паста', cake: 'торт', dessert: 'десерт', bento: 'бенто-торт',
     };
-    const dishOrder = ['burger', 'pasta', 'cake', 'dessert', 'bento'];
     const styleNames: Record<string, string> = {
       drama: 'тёмная драма', airy: 'светлый и воздушный', rustic: 'домашний рустик', fine: 'fine dining',
     };
@@ -162,51 +252,230 @@ const locations = [
       fine: 'contrast(1.07) saturate(0.92)',
     };
     const locationNames: Record<string, string> = { studio: 'студия', marble: 'мрамор', wood: 'дерево' };
-    const locationMats: Record<string, string> = { studio: '#15161A', marble: '#B9B9B4', wood: '#4A2F1C' };
 
-    const state = { dish: 'burger', style: 'drama', location: 'studio' };
+    const selection = { dish: 'burger', style: 'drama', location: 'studio' };
 
-    // предзагрузка всех «после»-кадров, чтобы переключение было без прыжков
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const setStage = (s: Stage) => { config.dataset.stage = s; };
+
+    // предзагрузка «после»-кадров, чтобы сборка кадра шла без прыжков
     dishOrder.forEach((d) => { new Image().src = `/images/after/${d}.jpg`; });
 
-    function render() {
-      const src = `/images/after/${state.dish}.jpg`;
-      const apply = () => {
-        img!.src = src;
-        img!.style.filter = styleFilters[state.style];
-        img!.alt = `Готовый кадр: ${dishNames[state.dish]}, стиль «${styleNames[state.style]}», локация «${locationNames[state.location]}»`;
-        const done = () => img!.removeAttribute('data-hidden');
-        if (img!.complete) done();
-        else img!.addEventListener('load', done, { once: true });
-      };
-      img!.setAttribute('data-hidden', '');
-      window.setTimeout(apply, 120);
+    // ── Карусели ──
+    config.querySelectorAll<HTMLElement>('[data-config-group]').forEach((carousel) => {
+      const key = carousel.dataset.configGroup as keyof typeof selection;
+      const items = Array.from(carousel.querySelectorAll<HTMLElement>('.carousel-item'));
+      const prev = carousel.querySelector<HTMLButtonElement>('.carousel-prev');
+      const next = carousel.querySelector<HTMLButtonElement>('.carousel-next');
+      const nameEl = carousel.querySelector<HTMLElement>('.carousel-name');
+      const countEl = carousel.querySelector<HTMLElement>('.carousel-count');
+      const names = key === 'dish' ? dishNames : key === 'style' ? styleNames : locationNames;
+      let index = 0;
 
-      frame!.style.background = locationMats[state.location];
-      metaText!.textContent = `${dishNames[state.dish]} · ${styleNames[state.style]} · ${locationNames[state.location]}`;
-      counter!.textContent = `кадр 0${dishOrder.indexOf(state.dish) + 1}/05`;
+      const update = (dir: 1 | -1 | 0) => {
+        items.forEach((it, i) => {
+          it.classList.remove('is-current', 'from-next', 'from-prev');
+          if (i === index) {
+            it.classList.add('is-current');
+            if (dir === 1) it.classList.add('from-next');
+            else if (dir === -1) it.classList.add('from-prev');
+          }
+        });
+        const current = items[index];
+        const value = current.dataset.value!;
+        selection[key] = value;
+        const display = names[value].charAt(0).toUpperCase() + names[value].slice(1);
+        if (nameEl) nameEl.textContent = display;
+        if (countEl) countEl.textContent = `${String(index + 1).padStart(2, '0')}/${String(items.length).padStart(2, '0')}`;
+        carousel.dataset.index = String(index);
+        if (prev) prev.disabled = index === 0;
+        if (next) next.disabled = index === items.length - 1;
+      };
+
+      prev?.addEventListener('click', () => { if (index > 0) { index--; update(-1); } });
+      next?.addEventListener('click', () => { if (index < items.length - 1) { index++; update(1); } });
+      update(0);
+    });
+
+    // ── Сборка итогового кадра ──
+    function paintFinal() {
+      finalImg!.src = `/images/after/${selection.dish}.jpg`;
+      finalImg!.alt = `Готовый кадр: ${dishNames[selection.dish]}, стиль «${styleNames[selection.style]}», локация «${locationNames[selection.location]}»`;
+      finalWrap.style.setProperty('--style-filter', styleFilters[selection.style]);
+      if (metaText) metaText.textContent = `${dishNames[selection.dish]} · ${styleNames[selection.style]} · ${locationNames[selection.location]}`;
+      if (metaCount) metaCount.textContent = `кадр ${String(dishOrder.indexOf(selection.dish) + 1).padStart(2, '0')}/05`;
     }
 
-    document.querySelectorAll<HTMLElement>('[data-config-group]').forEach((group) => {
-      const key = group.dataset.configGroup as keyof typeof state;
-      group.querySelectorAll<HTMLButtonElement>('.config-chip').forEach((chip) => {
-        chip.addEventListener('click', () => {
-          state[key] = chip.dataset.value!;
-          group.querySelectorAll('.config-chip').forEach((c) =>
-            c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'),
-          );
-          render();
-        });
-      });
-    });
+    let rafId = 0;
+    let timers: number[] = [];
+    const clearTimers = () => {
+      timers.forEach((t) => window.clearTimeout(t));
+      timers = [];
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+
+    function runCounter(duration: number) {
+      const start = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - start) / duration);
+        if (pctEl) pctEl.textContent = `${Math.round(p * 100)}%`;
+        if (p < 1) rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function reveal() {
+      clearTimers();
+      paintFinal();
+
+      if (reduced) {
+        // Reduced-motion: без схлопывания и блюра — сразу готовый кадр.
+        setStage('result');
+        buildEl!.hidden = true;
+        resultEl!.hidden = false;
+        finalWrap.classList.remove('developing');
+        if (statusEl) statusEl.hidden = true;
+        retryBtn?.focus();
+        return;
+      }
+
+      // 1. карусели съезжаются к центру
+      setStage('reveal');
+      // 2. после схлопывания — показываем кадр, который «собирается» из блюра
+      timers.push(window.setTimeout(() => {
+        buildEl!.hidden = true;
+        resultEl!.hidden = false;
+        if (statusEl) statusEl.hidden = false;
+        if (pctEl) pctEl.textContent = '0%';
+        setStage('result');
+        // блюр включается до вставки в поток, затем плавно проявляется
+        finalWrap.classList.add('developing');
+        requestAnimationFrame(() => requestAnimationFrame(() => finalWrap.classList.remove('developing')));
+        runCounter(1150);
+        timers.push(window.setTimeout(() => {
+          if (statusEl) statusEl.hidden = true;
+          statusEl?.setAttribute('aria-hidden', 'true');
+        }, 1250));
+      }, 560));
+    }
+
+    function resetToBuild() {
+      clearTimers();
+      finalWrap.classList.remove('developing');
+      if (statusEl) {
+        statusEl.hidden = false;
+        statusEl.removeAttribute('aria-hidden');
+      }
+      resultEl!.hidden = true;
+      buildEl!.hidden = false;
+      setStage('build');
+      (generateBtn as HTMLButtonElement).focus();
+    }
+
+    generateBtn.addEventListener('click', reveal);
+    retryBtn?.addEventListener('click', resetToBuild);
   }
 
   initConfigurator();
 </script>
 
 <style>
-  /* aria-pressed как источник стиля выбранной опции */
-  .config-chip[aria-pressed='true'] {
-    border-color: oklch(var(--p));
+  /* ── Карусель: кадр по центру, кнопки ▲/▼ сверху и снизу ── */
+  .carousel {
+    display: flex;
+    flex-direction: column;
+  }
+  .carousel-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin: 0.5rem 0;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    border: 1px solid oklch(var(--b3));
+    background: oklch(var(--b1));
+  }
+  .carousel-item {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .carousel-item.is-current {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  /* въезд нового кадра в направлении листания */
+  .carousel-item.is-current.from-next { animation: cin-next 0.34s cubic-bezier(0.4, 0, 0.2, 1); }
+  .carousel-item.is-current.from-prev { animation: cin-prev 0.34s cubic-bezier(0.4, 0, 0.2, 1); }
+  @keyframes cin-next { from { opacity: 0; transform: translateY(16%); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes cin-prev { from { opacity: 0; transform: translateY(-16%); } to { opacity: 1; transform: translateY(0); } }
+
+  /* [hidden] у оверлея статуса перебивается утилитой .flex — усиливаем специфичность */
+  .config-status[hidden] { display: none !important; }
+
+  .carousel-swatch { display: grid; place-items: stretch; }
+  .swatch-ring {
+    position: absolute;
+    inset: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 0.125rem;
+  }
+
+  /* ── Кнопки ▲/▼ ── */
+  .carousel-nav {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 2.25rem;
+    color: oklch(var(--bc));
+    border: 1px solid oklch(var(--b3));
+    border-radius: 0.25rem;
+    background: oklch(var(--b1));
+    transition: background-color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+  }
+  .carousel-nav:hover:not(:disabled) { border-color: oklch(var(--p)); }
+  .carousel-nav:focus-visible {
+    outline: 2px solid oklch(var(--p));
+    outline-offset: 2px;
+  }
+  .carousel-nav:disabled { opacity: 0.32; cursor: not-allowed; }
+
+  /* ── Схлопывание каруселей к центру при сборке результата ── */
+  .config-build { transition: opacity 0.4s ease; }
+  .config[data-stage='reveal'] .carousel,
+  .config[data-stage='reveal'] .config-actions {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+  }
+  .config[data-stage='reveal'] .carousel[data-col='left'] { transform: translateX(102%) scale(0.9); opacity: 0; }
+  .config[data-stage='reveal'] .carousel[data-col='right'] { transform: translateX(-102%) scale(0.9); opacity: 0; }
+  .config[data-stage='reveal'] .carousel[data-col='center'] { transform: scale(0.86); opacity: 0; }
+  .config[data-stage='reveal'] .config-actions { opacity: 0; }
+
+  /* ── Проявление собранного кадра из блюра (генерация) ── */
+  .config-result-stage { animation: result-in 0.5s ease both; }
+  @keyframes result-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+
+  .config-final-img {
+    filter: var(--style-filter, none);
+    transition: filter 1.1s ease, opacity 1.1s ease, transform 1.1s ease;
+  }
+  .config-final.developing .config-final-img {
+    filter: var(--style-filter, none) blur(28px);
+    opacity: 0.5;
+    transform: scale(1.04);
+  }
+
+  /* ── prefers-reduced-motion: без движения, мгновенная смена ── */
+  @media (prefers-reduced-motion: reduce) {
+    .carousel-item.is-current.from-next,
+    .carousel-item.is-current.from-prev { animation: none; }
+    .config[data-stage='reveal'] .carousel,
+    .config[data-stage='reveal'] .config-actions,
+    .config-result-stage,
+    .config-final-img { transition: none !important; animation: none !important; }
+    .config[data-stage='reveal'] .carousel { transform: none; opacity: 1; }
   }
 </style>
