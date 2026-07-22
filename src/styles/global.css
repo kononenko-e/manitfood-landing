@@ -68,8 +68,7 @@ html:not(.js) .ba-scene {
 @media (prefers-reduced-motion: reduce) {
   .morph-zone,
   .morph-zone .morph-surface,
-  .segment-content,
-  .config-result img {
+  .segment-content {
     transition: none !important;
   }
 }
@@ -79,12 +78,4 @@ html:not(.js) .ba-scene {
    его место занимает пристыковавшийся логотип из хиро. */
 html.logo-morph #header-logo-anchor {
   visibility: hidden;
-}
-
-/* ===== §5 Конфигуратор: кроссфейд результата ===== */
-.config-result img {
-  transition: opacity 0.35s ease;
-}
-.config-result img[data-hidden] {
-  opacity: 0;
 }

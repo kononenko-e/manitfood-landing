@@ -131,7 +131,11 @@ const segments = [
     const themes: Record<string, string> = { cafe: 'studio-dark', home: 'home-warm' };
 
     function select(id: string) {
-      zone!.dataset.theme = themes[id] ?? 'studio-dark';
+      const theme = themes[id] ?? 'studio-dark';
+      zone!.dataset.theme = theme;
+      // Секция «Как это работает» живёт в теме выбранного сегмента (решение автора):
+      // конфигуратор наследует тот же мир, что и сегмент-зона выше.
+      document.dispatchEvent(new CustomEvent('manit:segment', { detail: theme }));
       cards.forEach((c) => c.setAttribute('aria-pressed', c.dataset.segment === id ? 'true' : 'false'));
       contents.forEach((el) => {
         if (el.dataset.segmentContent === id) {
