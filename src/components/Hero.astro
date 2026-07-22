@@ -126,7 +126,7 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
 
     function update() {
       const y = window.scrollY;
-      const p = Math.min(1, y / dockAt);
+      const p = Math.max(0, Math.min(1, y / dockAt));
       if (p >= 1) {
         // пристыкован: фиксируется точно на месте логотипа в хедере
         logo!.classList.add('is-docked');
