@@ -74,6 +74,13 @@ html:not(.js) .ba-scene {
   }
 }
 
+/* ===== Логотип: морфинг из хиро в хедер =====
+   Пока морфинг активен (JS, без reduced-motion), логотип в хедере скрыт —
+   его место занимает пристыковавшийся логотип из хиро. */
+html.logo-morph #header-logo-anchor {
+  visibility: hidden;
+}
+
 /* ===== §5 Конфигуратор: кроссфейд результата ===== */
 .config-result img {
   transition: opacity 0.35s ease;

@@ -5,7 +5,9 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
 <!-- §0. Sticky-хедер: плоский, без теней, тонкая нижняя обводка (DESIGN §6) -->
 <header class="navbar fixed top-0 z-50 min-h-16 border-b border-base-300 bg-base-100/85 px-4 backdrop-blur md:px-8">
   <div class="flex-1">
-    <a href="#top" class="relative inline-block text-xl font-bold lowercase tracking-tight" aria-label="Манит — на начало страницы">
+    <!-- слот-мишень для «переезжающего» логотипа из хиро; при активном морфинге
+         скрыт (visibility), но держит место и остаётся для no-JS / reduced-motion -->
+    <a id="header-logo-anchor" href="#top" class="relative inline-block text-xl font-bold lowercase tracking-tight" aria-label="Манит — на начало страницы">
       манит
       <!-- «метка редактора»: обводка-росчерк лаймом под словом -->
       <svg class="absolute -bottom-1 left-0 w-full" viewBox="0 0 64 6" fill="none" aria-hidden="true">

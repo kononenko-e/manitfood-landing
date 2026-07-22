@@ -15,6 +15,20 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
   <div class="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-4 md:grid-cols-2 md:gap-10 md:px-8">
     <!-- Текст-колонка -->
     <div>
+      <!-- крупный логотип; при скролле уменьшается и пристыковывается в хедер -->
+      <div id="hero-logo-box" class="mb-10">
+        <a
+          id="hero-logo"
+          href="#top"
+          class="relative z-[60] inline-block text-6xl font-bold lowercase tracking-tight md:text-8xl"
+          aria-label="Манит — на начало страницы"
+        >
+          манит
+          <svg class="absolute -bottom-2 left-0 w-full md:-bottom-3" viewBox="0 0 64 6" fill="none" aria-hidden="true">
+            <path d="M2 4.5C14 1.5 50 1 62 3.5" stroke="#D6F23C" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+        </a>
+      </div>
       <h1 class="text-4xl font-bold leading-[1.08] tracking-tight md:text-[3.4rem]">
         Фото блюда с&nbsp;телефона — как из фотостудии
       </h1>
@@ -91,3 +105,80 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
     </div>
   </div>
 </section>
+
+<script>
+  // Морфинг логотипа: из хиро — в слот хедера, синхронно со скроллом.
+  function initLogoMorph() {
+    const logo = document.getElementById('hero-logo');
+    const box = document.getElementById('hero-logo-box');
+    const slot = document.getElementById('header-logo-anchor');
+    if (!logo || !box || !slot) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.documentElement.classList.add('logo-morph');
+
+    let heroTop = 0;
+    let heroLeft = 0;
+    let slotTop = 0;
+    let slotLeft = 0;
+    let scaleK = 1;
+    let dockAt = 1;
+
+    function update() {
+      const y = window.scrollY;
+      const p = Math.min(1, y / dockAt);
+      if (p >= 1) {
+        // пристыкован: фиксируется точно на месте логотипа в хедере
+        logo!.classList.add('is-docked');
+        logo!.style.top = slotTop + 'px';
+        logo!.style.left = slotLeft + 'px';
+        logo!.style.transform = `scale(${scaleK})`;
+      } else {
+        logo!.classList.remove('is-docked');
+        logo!.style.top = '';
+        logo!.style.left = '';
+        const naturalTop = heroTop - y;
+        const dx = (slotLeft - heroLeft) * p;
+        const dy = (slotTop - naturalTop) * p;
+        const k = 1 + (scaleK - 1) * p;
+        logo!.style.transform = `translate(${dx}px, ${dy}px) scale(${k})`;
+      }
+    }
+
+    function measure() {
+      const wasDocked = logo!.classList.contains('is-docked');
+      logo!.classList.remove('is-docked');
+      logo!.style.transform = 'none';
+      logo!.style.top = '';
+      logo!.style.left = '';
+      const r = logo!.getBoundingClientRect();
+      box!.style.height = r.height + 'px'; // место в потоке на время фиксации
+      heroTop = r.top + window.scrollY;
+      heroLeft = r.left;
+      const s = slot!.getBoundingClientRect(); // хедер фиксирован — координаты вьюпорта
+      slotTop = s.top;
+      slotLeft = s.left;
+      scaleK = s.width / r.width;
+      dockAt = Math.max(1, heroTop - slotTop);
+      if (wasDocked) logo!.classList.add('is-docked');
+      update();
+    }
+
+    document.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', measure);
+    document.fonts?.ready.then(measure);
+    measure();
+  }
+
+  initLogoMorph();
+</script>
+
+<style>
+  #hero-logo {
+    transform-origin: top left;
+    will-change: transform;
+  }
+  #hero-logo.is-docked {
+    position: fixed;
+  }
+</style>
