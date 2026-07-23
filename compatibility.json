@@ -1,0 +1,172 @@
+{
+  "_meta": {
+    "name": "manit-bot compatibility matrix",
+    "version": "1.0",
+    "logic": "binary (compatible / incompatible), clash-only",
+    "note": "Пары считаются совместимыми по умолчанию; в матрицах перечислены только РАЗРЕШЁННЫЕ значения. Всё, чего нет в списке — несовместимо и не показывается в карусели следующего шага.",
+    "cascade": "genre -> style (filter by genre) -> location (filter by genre AND style) -> props (filter by style) -> format (free)"
+  },
+
+  "axes": {
+    "genre": {
+      "flat_lay":      "Flat lay — строго 90° сверху",
+      "angle_45":      "45° — три четверти, ресторанный ракурс",
+      "eye_level":     "Eye-level — камера вровень, кинематографично",
+      "macro":         "Macro — экстремально близко, текстура",
+      "hero":          "Hero — один объект крупно, изолированно",
+      "group":         "Group — несколько блюд / spread",
+      "lifestyle_ots": "Lifestyle / over-the-shoulder — блюдо + окружение",
+      "hands_action":  "Hands in action — руки в кадре, процесс"
+    },
+    "style": {
+      "dark_drama":        "Тёмная драма",
+      "bright_airy":       "Светлый и воздушный",
+      "dynamic_splash":    "Динамика / сплэш",
+      "editorial_flatlay": "Флэтлей редакторский",
+      "homey_rustic":      "Домашний рустик",
+      "fine_dining":       "Fine dining редакторский",
+      "vintage_film":      "Винтажная плёнка",
+      "monochrome":        "Монохром / дуотон",
+      "pastel":            "Пастельная нежность",
+      "pop_art":           "Яркий поп-арт",
+      "macro_texture":     "Макро-текстура",
+      "hands_lifestyle":   "С руками / лайфстайл"
+    },
+    "location_type": {
+      "scene":   "Готовая сцена (3D-среда)",
+      "surface": "Поверхность (плоский фон)",
+      "studio":  "Студийный фон (бесшовный)"
+    },
+    "location": {
+      "scene": {
+        "home_kitchen":  "Домашняя кухня",
+        "restaurant":    "Ресторанная подача",
+        "cafe_bar":      "Кофейня / бар",
+        "terrace":       "Outdoor: терраса",
+        "picnic":        "Outdoor: пикник",
+        "beach":         "Outdoor: пляж",
+        "festive_table": "Праздничный стол",
+        "food_market":   "Рынок / food market"
+      },
+      "surface": {
+        "light_wood":         "Светлое дерево (farmhouse)",
+        "dark_wood":          "Тёмное дерево / мореный дуб",
+        "white_marble":       "Белый мрамор с прожилками",
+        "black_marble_slate": "Чёрный мрамор / сланец",
+        "concrete":           "Бетон / серый камень",
+        "white_countertop":   "Белая / нейтральная столешница",
+        "kraft_paper":        "Крафт-бумага / пергамент",
+        "linen":              "Льняная скатерть",
+        "checkered":          "Клетчатая ткань",
+        "texture_closeup":    "Текстура крупным планом"
+      },
+      "studio": {
+        "solid_light":  "Однотонный светлый",
+        "solid_dark":   "Однотонный тёмный",
+        "pastel_color": "Цветной (пастель)",
+        "bright_color": "Цветной (яркий)",
+        "gradient":     "Градиент"
+      }
+    },
+    "props": {
+      "minimal":     "Минимум — только блюдо",
+      "utensils":    "Утварь — вилка/нож/салфетка",
+      "companions":  "Ингредиенты-компаньоны",
+      "drink_pair":  "Напиток в паре",
+      "themed_decor":"Тематический декор",
+      "messy_live":  "«Грязная» / живая подача"
+    },
+    "format": {
+      "1:1":  "Instagram пост, Авито, маркетплейсы",
+      "4:5":  "Instagram portrait, каталог",
+      "9:16": "Stories, Reels, TikTok",
+      "16:9": "YouTube, горизонтальный баннер",
+      "2:3":  "Pinterest pin, обложка"
+    }
+  },
+
+  "_comment_genre_style": "Шаг 2. Ключ = жанр, значение = стили, которые показываем в карусели после выбора этого жанра.",
+  "genre_style": {
+    "flat_lay":      ["bright_airy", "editorial_flatlay", "homey_rustic", "monochrome", "pastel", "pop_art"],
+    "angle_45":      ["dark_drama", "bright_airy", "dynamic_splash", "homey_rustic", "fine_dining", "vintage_film", "monochrome", "pastel", "hands_lifestyle"],
+    "eye_level":     ["dark_drama", "bright_airy", "dynamic_splash", "homey_rustic", "fine_dining", "vintage_film", "monochrome", "pastel", "pop_art", "hands_lifestyle"],
+    "macro":         ["dark_drama", "bright_airy", "dynamic_splash", "homey_rustic", "fine_dining", "monochrome", "pastel", "macro_texture"],
+    "hero":          ["dark_drama", "bright_airy", "dynamic_splash", "homey_rustic", "fine_dining", "vintage_film", "monochrome", "pastel", "pop_art", "macro_texture"],
+    "group":         ["dark_drama", "bright_airy", "editorial_flatlay", "homey_rustic", "vintage_film", "monochrome", "pastel", "pop_art"],
+    "lifestyle_ots": ["bright_airy", "homey_rustic", "vintage_film", "pastel", "hands_lifestyle"],
+    "hands_action":  ["dark_drama", "bright_airy", "dynamic_splash", "homey_rustic", "vintage_film", "monochrome", "pastel", "hands_lifestyle"]
+  },
+
+  "_comment_genre_location_type": "Шаг 3 (часть 1). Какие ТИПЫ локаций в принципе доступны для жанра.",
+  "genre_location_type": {
+    "flat_lay":      ["surface", "studio"],
+    "angle_45":      ["scene", "surface", "studio"],
+    "eye_level":     ["scene", "surface", "studio"],
+    "macro":         ["surface", "studio"],
+    "hero":          ["scene", "surface", "studio"],
+    "group":         ["scene", "surface", "studio"],
+    "lifestyle_ots": ["scene"],
+    "hands_action":  ["scene", "surface", "studio"]
+  },
+
+  "_comment_style_location_type": "Шаг 3 (часть 2). Какие ТИПЫ локаций подходят стилю. Итоговые табы = пересечение genre_location_type ∩ style_location_type.",
+  "style_location_type": {
+    "dark_drama":        ["scene", "surface", "studio"],
+    "bright_airy":       ["scene", "surface", "studio"],
+    "dynamic_splash":    ["surface", "studio"],
+    "editorial_flatlay": ["surface", "studio"],
+    "homey_rustic":      ["scene", "surface"],
+    "fine_dining":       ["scene", "surface", "studio"],
+    "vintage_film":      ["scene", "surface", "studio"],
+    "monochrome":        ["scene", "surface", "studio"],
+    "pastel":            ["scene", "surface", "studio"],
+    "pop_art":           ["surface", "studio"],
+    "macro_texture":     ["surface", "studio"],
+    "hands_lifestyle":   ["scene", "surface"]
+  },
+
+  "_comment_style_props": "Шаг 4. Ключ = стиль, значение = уровни реквизита, которые показываем.",
+  "style_props": {
+    "dark_drama":        ["minimal", "utensils", "companions", "drink_pair", "themed_decor", "messy_live"],
+    "bright_airy":       ["minimal", "utensils", "companions", "drink_pair", "themed_decor"],
+    "dynamic_splash":    ["minimal", "utensils", "companions", "drink_pair", "messy_live"],
+    "editorial_flatlay": ["minimal", "utensils", "companions", "drink_pair", "themed_decor"],
+    "homey_rustic":      ["minimal", "utensils", "companions", "drink_pair", "themed_decor", "messy_live"],
+    "fine_dining":       ["minimal", "utensils", "drink_pair"],
+    "vintage_film":      ["minimal", "utensils", "companions", "drink_pair", "themed_decor", "messy_live"],
+    "monochrome":        ["minimal", "utensils", "companions", "drink_pair", "themed_decor", "messy_live"],
+    "pastel":            ["minimal", "utensils", "companions", "drink_pair", "themed_decor"],
+    "pop_art":           ["minimal", "utensils", "companions", "drink_pair"],
+    "macro_texture":     ["minimal", "messy_live"],
+    "hands_lifestyle":   ["minimal", "utensils", "companions", "drink_pair", "themed_decor", "messy_live"]
+  },
+
+  "_comment_style_preferred_locations": "SOFT (не бинарный фильтр). Порядок сортировки конкретных локаций внутри разрешённого типа — по релевантности стилю. Не в списке = показываем ниже, не прячем.",
+  "style_preferred_locations": {
+    "dark_drama":        ["dark_wood", "black_marble_slate", "concrete", "solid_dark", "restaurant", "cafe_bar"],
+    "bright_airy":       ["white_marble", "light_wood", "white_countertop", "solid_light", "home_kitchen", "terrace"],
+    "dynamic_splash":    ["concrete", "black_marble_slate", "solid_dark", "gradient"],
+    "editorial_flatlay": ["kraft_paper", "white_countertop", "concrete", "linen", "solid_light"],
+    "homey_rustic":      ["light_wood", "linen", "checkered", "home_kitchen", "picnic", "food_market"],
+    "fine_dining":       ["black_marble_slate", "solid_dark", "restaurant", "concrete"],
+    "vintage_film":      ["dark_wood", "linen", "checkered", "home_kitchen", "cafe_bar", "picnic"],
+    "monochrome":        ["black_marble_slate", "concrete", "solid_dark", "solid_light"],
+    "pastel":            ["white_countertop", "linen", "pastel_color", "cafe_bar", "home_kitchen"],
+    "pop_art":           ["bright_color", "gradient", "solid_light"],
+    "macro_texture":     ["texture_closeup", "dark_wood", "concrete", "solid_dark"],
+    "hands_lifestyle":   ["light_wood", "linen", "home_kitchen", "cafe_bar", "picnic"]
+  },
+
+  "_comment_format": "Шаг 5. Формат ни от чего не зависит — доступны все. preferred_format = SOFT-подсказка по жанру для дефолтной подсветки.",
+  "format_unconstrained": true,
+  "genre_preferred_format": {
+    "flat_lay":      ["1:1", "4:5", "2:3"],
+    "angle_45":      ["4:5", "1:1", "2:3"],
+    "eye_level":     ["16:9", "4:5", "1:1"],
+    "macro":         ["1:1", "4:5"],
+    "hero":          ["4:5", "2:3", "1:1"],
+    "group":         ["16:9", "1:1", "4:5"],
+    "lifestyle_ots": ["9:16", "4:5"],
+    "hands_action":  ["9:16", "4:5"]
+  }
+}
