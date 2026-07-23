@@ -8,3 +8,5 @@ dist
 .idea/
 # git worktrees (эфемерные — не коммитить как gitlink)
 .claude/worktrees/
+# Astro generated types
+.astro/
