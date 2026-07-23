@@ -15,16 +15,20 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
   <div class="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-4 md:grid-cols-2 md:gap-10 md:px-8">
     <!-- Текст-колонка -->
     <div>
-      <!-- крупный логотип; при скролле уменьшается и пристыковывается в хедер -->
-      <div id="hero-logo-box" class="mb-10">
-        <a
-          id="hero-logo"
-          href="#top"
-          class="relative z-[60] inline-block"
-          aria-label="Манит — на начало страницы"
-        >
-          <img src="/logo.svg" alt="" aria-hidden="true" class="h-14 w-auto md:h-20" />
-        </a>
+      <!-- слово «манит»: при скролле уезжает в хедер и там достраивает лого рядом
+           с иконкой; слоган-хвост гаснет по ходу скролла, чтобы не «повисать» отдельно -->
+      <div id="hero-logo-row" class="mb-10 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <div id="hero-logo-box">
+          <a
+            id="hero-logo"
+            href="#top"
+            class="relative z-[60] inline-block text-6xl font-bold lowercase tracking-tight md:text-8xl"
+            aria-label="Манит — на начало страницы"
+          >
+            м<span class="text-primary">а</span>нит
+          </a>
+        </div>
+        <p id="hero-tagline" class="text-lg text-base-content/60 md:text-2xl">— но не обманывает</p>
       </div>
       <h1 class="text-4xl font-bold leading-[1.08] tracking-tight md:text-[3.4rem]">
         Фото блюда с&nbsp;телефона — как из фотостудии
@@ -104,12 +108,15 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
 </section>
 
 <script>
-  // Морфинг логотипа: из хиро — в слот хедера, синхронно со скроллом.
+  // Морфинг логотипа: слово «манит» уезжает из хиро в хедер, синхронно со скроллом,
+  // и достраивает там лого рядом со статичной иконкой. Слоган-хвост в хиро гаснет
+  // по ходу того же скролла, чтобы не остаться висеть в одиночестве без слова.
   function initLogoMorph() {
     const logo = document.getElementById('hero-logo');
     const box = document.getElementById('hero-logo-box');
-    const slot = document.getElementById('header-logo-anchor');
-    if (!logo || !box || !slot) return;
+    const slotText = document.getElementById('header-logo-text');
+    const tagline = document.getElementById('hero-tagline');
+    if (!logo || !box || !slotText) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     document.documentElement.classList.add('logo-morph');
@@ -124,8 +131,9 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
     function update() {
       const y = window.scrollY;
       const p = Math.max(0, Math.min(1, y / dockAt));
+      if (tagline) tagline.style.opacity = String(1 - p);
       if (p >= 1) {
-        // пристыкован: фиксируется точно на месте логотипа в хедере
+        // пристыкован: фиксируется точно на месте слова в хедере, рядом с иконкой
         logo!.classList.add('is-docked');
         logo!.style.top = slotTop + 'px';
         logo!.style.left = slotLeft + 'px';
@@ -149,10 +157,11 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
       logo!.style.top = '';
       logo!.style.left = '';
       const r = logo!.getBoundingClientRect();
-      box!.style.height = r.height + 'px'; // место в потоке на время фиксации
+      box!.style.width = r.width + 'px'; // место в потоке для слогана рядом
+      box!.style.height = r.height + 'px'; // и на время фиксации
       heroTop = r.top + window.scrollY;
       heroLeft = r.left;
-      const s = slot!.getBoundingClientRect(); // хедер фиксирован — координаты вьюпорта
+      const s = slotText!.getBoundingClientRect(); // хедер фиксирован — координаты вьюпорта
       slotTop = s.top;
       slotLeft = s.left;
       scaleK = s.width / r.width;
@@ -165,12 +174,10 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
     window.addEventListener('resize', measure);
     document.fonts?.ready.then(measure);
 
-    // логотип — svg-картинка; до её загрузки ширина неизвестна браузеру,
-    // поэтому домеряем масштаб повторно, когда обе копии (hero + хедер) готовы
-    const images = [logo!.querySelector('img'), slot!.querySelector('img')].filter(
-      (img): img is HTMLImageElement => !!img,
-    );
-    Promise.all(images.map((img) => img.decode().catch(() => {}))).then(measure);
+    // иконка в хедере — svg-картинка; до её загрузки ширина неизвестна браузеру,
+    // а от неё зависит позиция текстового слота рядом — домеряем повторно после загрузки
+    const headerIcon = document.querySelector<HTMLImageElement>('#header-logo-anchor img');
+    headerIcon?.decode().catch(() => {}).then(measure);
 
     measure();
   }
