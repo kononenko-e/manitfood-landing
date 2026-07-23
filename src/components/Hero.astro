@@ -20,13 +20,10 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
         <a
           id="hero-logo"
           href="#top"
-          class="relative z-[60] inline-block text-6xl font-bold lowercase tracking-tight md:text-8xl"
+          class="relative z-[60] inline-block"
           aria-label="Манит — на начало страницы"
         >
-          манит
-          <svg class="absolute -bottom-2 left-0 w-full md:-bottom-3" viewBox="0 0 64 6" fill="none" aria-hidden="true">
-            <path d="M2 4.5C14 1.5 50 1 62 3.5" stroke="#D6F23C" stroke-width="2.5" stroke-linecap="round" />
-          </svg>
+          <img src="/logo.svg" alt="" aria-hidden="true" class="h-14 w-auto md:h-20" />
         </a>
       </div>
       <h1 class="text-4xl font-bold leading-[1.08] tracking-tight md:text-[3.4rem]">
@@ -167,6 +164,14 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
     document.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', measure);
     document.fonts?.ready.then(measure);
+
+    // логотип — svg-картинка; до её загрузки ширина неизвестна браузеру,
+    // поэтому домеряем масштаб повторно, когда обе копии (hero + хедер) готовы
+    const images = [logo!.querySelector('img'), slot!.querySelector('img')].filter(
+      (img): img is HTMLImageElement => !!img,
+    );
+    Promise.all(images.map((img) => img.decode().catch(() => {}))).then(measure);
+
     measure();
   }
 
