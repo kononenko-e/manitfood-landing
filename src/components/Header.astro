@@ -5,10 +5,14 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
 <!-- §0. Sticky-хедер: плоский, без теней, тонкая нижняя обводка (DESIGN §6) -->
 <header class="navbar fixed top-0 z-50 min-h-16 border-b border-base-300 bg-base-100/85 px-4 backdrop-blur md:px-8">
   <div class="flex-1">
-    <!-- слот-мишень для «переезжающего» логотипа из хиро; при активном морфинге
-         скрыт (visibility), но держит место и остаётся для no-JS / reduced-motion -->
-    <a id="header-logo-anchor" href="#top" class="relative inline-block" aria-label="Манит — на начало страницы">
-      <img src="/logo.svg" alt="" aria-hidden="true" class="h-7 w-auto" />
+    <!-- иконка — статичная часть лого, всегда на месте; слово «манит» рядом
+         скрыто (visibility) во время морфинга — его место занимает пристыковавшееся
+         слово из хиро, а сам текст остаётся для no-JS / reduced-motion -->
+    <a id="header-logo-anchor" href="#top" class="relative inline-flex items-center gap-2" aria-label="Манит — на начало страницы">
+      <img src="/logo-icon.svg" alt="" aria-hidden="true" class="h-6 w-auto shrink-0" />
+      <span id="header-logo-text" class="relative inline-block text-xl font-bold lowercase tracking-tight">
+        м<span class="text-primary">а</span>нит
+      </span>
     </a>
   </div>
   <nav class="hidden flex-none items-center gap-1 md:flex" aria-label="Основные разделы">
