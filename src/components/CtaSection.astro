@@ -14,12 +14,16 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
       Карта не нужна, чтобы попробовать.
     </p>
     <div class="mt-10">
-      <a href={BOT_URL} target="_blank" rel="noopener" class="btn btn-primary btn-lg rounded-full px-12 shadow-shutter">
+      <a href={BOT_URL} target="_blank" rel="noopener" class="btn btn-primary btn-lg gap-2.5 rounded-sm px-12 shadow-shutter">
+        <!-- телеграм-плоскость: явный сигнал, что кнопка открывает бота в Telegram -->
+        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M23.11 3.79L19.5 20.84c-.25 1.21-.98 1.5-2 .94l-5.5-4.07-2.66 2.57c-.3.3-.55.56-1.13.56l.4-5.71 10.35-9.35c.45-.4-.1-.63-.7-.23L5.31 12.4l-5.65-1.76c-1.22-.38-1.24-1.22.26-1.82L21.5 1.66c1.03-.4 1.93.24 1.61 2.13z" />
+        </svg>
         {CTA_LABEL}
       </a>
     </div>
     <p class="mt-6 font-mono text-sm font-medium text-base-content/60">
-      без карты · оплата и тарифы — в боте · отмена в любой момент
+      без карты · отмена в любой момент
     </p>
   </div>
 </section>
