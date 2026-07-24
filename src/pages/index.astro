@@ -1,12 +1,12 @@
 ---
 // Лендинг «Манит» — структура по manitfood-landing-structure.md:
-// расхождение (hero → до/после → развилка → сегмент-зона) →
-// схождение (конфигуратор → тарифы → FAQ → финальный CTA).
+// расхождение (hero с парой до/после → как работает в 3 шага → развилка →
+// сегмент-зона) → схождение (конфигуратор → тарифы → FAQ → финальный CTA).
 import SeoJsonLd from '@/components/SeoJsonLd.astro';
 import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 import Hero from '@/components/Hero.astro';
-import BeforeAfter from '@/components/BeforeAfter.astro';
+import Steps from '@/components/Steps.astro';
 import SegmentZone from '@/components/SegmentZone.astro';
 import HowItWorks from '@/components/HowItWorks.astro';
 import Pricing from '@/components/Pricing.astro';
@@ -49,7 +49,7 @@ const productSchema = {
   <Header />
   <main>
     <Hero />
-    <BeforeAfter />
+    <Steps />
     <SegmentZone />
     <HowItWorks />
     <Pricing />

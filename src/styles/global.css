@@ -8,35 +8,8 @@
   }
 }
 
-@layer utilities {
-  /* подпись «под кадром на контрольном листе» — чуть шире трекинг (DESIGN §3) */
-  .caption-label {
-    @apply font-medium text-[0.8125rem] uppercase tracking-[0.14em];
-  }
-}
-
-/* ===== §2 Живое до/после: скролл-reveal сверху вниз =====
-   --reveal (0–100%) выставляет скрипт; «до» клипуется сверху,
-   открывая «после». Без JS (html без .js) — статичная пара side-by-side. */
-.ba-before {
-  clip-path: inset(var(--reveal, 0%) 0 0 0);
-}
-
-html.js .ba-fallback {
-  display: none;
-}
-html:not(.js) .ba-scene {
-  display: none;
-}
-
-/* prefers-reduced-motion: скролл-джекинг отключается — показываем статичную пару */
+/* prefers-reduced-motion: убираем плавный скролл-якорь */
 @media (prefers-reduced-motion: reduce) {
-  .ba-scene {
-    display: none;
-  }
-  html.js .ba-fallback {
-    display: block;
-  }
   html {
     scroll-behavior: auto;
   }
