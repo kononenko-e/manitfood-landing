@@ -5,7 +5,9 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
 <!-- §1. Hero: общее обещание для всех, до развилки. Master-мир.
      Иерархия сессии: слоган-«шапка» на всю ширину — единственная гигантская строка
      страницы; функциональный h1 сознательно ступенькой ниже, чтобы две крупные
-     строки не спорили. Слово «манит» уезжает по скроллу в хедер (морфинг лого). -->
+     строки не спорили. Слово «манит» уезжает по скроллу в хедер (морфинг лого).
+     Правая колонка — живая пара «до/после» (без слайдера); объяснение в 3 шага и
+     подробный подзаголовок — в следующем блоке §1a. -->
 <section id="top" class="relative overflow-hidden bg-base-100 pt-28 pb-20 md:pt-40 md:pb-28">
   <!-- мягкий световой спот, не перегруженный фон -->
   <div
@@ -19,42 +21,46 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
     <!-- Слоган-«шапка» на всю ширину. «манит» — та же величина, что «но не обманывает»
          (пожелание автора), но акцент на слове держит начертание bold + лаймовая «а»;
          хвост слогана — то же кегль, но легче (medium) и приглушён, чтобы не перетягивать.
-         При скролле «манит» уезжает в хедер, а хвост синхронно гаснет, чтобы не повиснуть. -->
-    <div id="hero-logo-row" class="mb-10 flex flex-wrap items-baseline gap-x-4 gap-y-1 md:mb-14">
-      <div id="hero-logo-box">
-        <a
-          id="hero-logo"
-          href="#top"
-          class="relative z-[60] inline-block text-6xl font-bold lowercase leading-none tracking-tight md:text-8xl"
-          aria-label="Манит — на начало страницы"
-        >
-          м<span class="text-primary">а</span>нит
-        </a>
+         Запятая идёт сразу за словом, а «но не обманывает» — со следующей строки.
+         При скролле «манит» уезжает в хедер, а запятая и хвост синхронно гаснут. -->
+    <div id="hero-logo-row" class="mb-10 md:mb-14">
+      <div class="flex items-baseline">
+        <div id="hero-logo-box">
+          <a
+            id="hero-logo"
+            href="#top"
+            class="relative z-[60] inline-block text-6xl font-bold lowercase leading-none tracking-tight md:text-8xl"
+            aria-label="Манит — на начало страницы"
+          >
+            м<span class="text-primary">а</span>нит
+          </a>
+        </div>
+        <span
+          id="hero-comma"
+          class="text-6xl font-medium leading-none tracking-tight text-base-content/45 md:text-8xl"
+          aria-hidden="true"
+        >,</span>
       </div>
       <p
         id="hero-tagline"
-        class="text-6xl font-medium leading-none tracking-tight text-base-content/45 md:text-8xl"
+        class="mt-1 text-6xl font-medium leading-none tracking-tight text-base-content/45 md:text-8xl"
       >
-        — но не обманывает
+        но&nbsp;не обманывает
       </p>
     </div>
 
-    <!-- Питч + мокап -->
-    <div class="grid grid-cols-1 items-center gap-14 md:grid-cols-2 md:gap-10">
-      <!-- Текст-колонка -->
+    <!-- Питч + пара «до/после» -->
+    <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-10">
+      <!-- Текст-колонка: только заголовок и кнопки (подробности — в блоке §1a ниже) -->
       <div>
-        <h1 class="max-w-lg text-3xl font-bold leading-[1.1] tracking-tight md:text-[2.6rem]">
-          Блюдо то&nbsp;же — фото аппетитнее
+        <h1 class="max-w-md text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl">
+          Бот для фуд-фото
         </h1>
-        <p class="mt-6 max-w-xl text-lg text-base-content/70 md:text-xl">
-          Загрузите обычный снимок — бот вернёт профессиональное фото для меню, агрегаторов
-          и&nbsp;соцсетей. Без фотографа, ожидания и&nbsp;переплат.
-        </p>
         <div class="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <a href={BOT_URL} target="_blank" rel="noopener" class="btn btn-primary btn-lg rounded-full px-9 shadow-shutter">
             {CTA_LABEL}
           </a>
-          <a href="#demo" class="btn btn-ghost btn-lg rounded-sm border border-base-300 px-7 font-medium">
+          <a href="#how-steps" class="btn btn-ghost btn-lg rounded-sm border border-base-300 px-7 font-medium">
             Посмотреть как
           </a>
         </div>
@@ -63,61 +69,38 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
         </p>
       </div>
 
-      <!-- Визуал-колонка: мокап Telegram-бота (показывает саму поверхность продукта;
-           §2 ниже даёт кинематографичное до/после — здесь другое блюдо, не дубль) -->
-      <div class="mx-auto w-full max-w-sm">
-        <div class="rounded-[1.75rem] border border-base-300 bg-base-100 p-3 shadow-frame-warm">
-          <div class="rounded-[1.25rem] bg-base-200 p-4">
-            <!-- шапка чата -->
-            <div class="flex items-center gap-3 border-b border-base-300 pb-3">
-              <div class="flex h-9 w-9 items-center justify-center rounded-full bg-neutral font-bold lowercase text-primary">м</div>
-              <div>
-                <p class="text-sm font-semibold leading-tight">Манит</p>
-                <p class="text-xs leading-tight text-base-content/50">бот · онлайн</p>
-              </div>
-            </div>
-            <!-- диалог -->
-            <div class="mt-4 space-y-3">
-              <div class="chat chat-end">
-                <div class="chat-bubble max-w-[13rem] bg-base-300 p-1.5 text-base-content">
-                  <img
-                    src="/images/before/burger.jpg"
-                    alt="Обычный снимок бургера на телефон, отправленный в бота"
-                    class="w-full rounded-sm object-cover aspect-[4/3]"
-                    width="416"
-                    height="312"
-                    loading="eager"
-                    fetchpriority="high"
-                  />
-                  <p class="px-1 py-1 text-xs text-base-content/70">Снял на телефон как есть</p>
-                </div>
-              </div>
-              <div class="chat chat-start">
-                <div class="chat-bubble bg-base-100 text-sm text-base-content">
-                  Принял! Стиль — «Тёмная драма», локация — «Студия». Снимаю&nbsp;⏳
-                </div>
-              </div>
-              <div class="chat chat-start">
-                <div class="chat-bubble max-w-[13rem] bg-base-100 p-1.5 text-base-content">
-                  <img
-                    src="/images/after/burger.jpg"
-                    alt="Готовое профессиональное фото того же бургера от бота Манит"
-                    class="w-full rounded-sm object-cover aspect-[4/3] ring-2 ring-primary"
-                    width="416"
-                    height="312"
-                    loading="eager"
-                    fetchpriority="high"
-                  />
-                  <p class="px-1 pt-1.5 font-mono text-[0.7rem] font-medium text-base-content/70">
-                    готово · 00:47 · то&nbsp;же блюдо
-                  </p>
-                </div>
-              </div>
-            </div>
+      <!-- Визуал-колонка: живая пара «до/после» без слайдера, просто рядом -->
+      <figure class="mx-auto w-full max-w-md">
+        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+          <div class="relative">
+            <img
+              src="/images/before/burger.jpg"
+              alt="Обычный снимок бургера на телефон — до"
+              class="aspect-[4/5] w-full rounded-sm object-cover shadow-frame-warm"
+              width="320"
+              height="400"
+              loading="eager"
+              fetchpriority="high"
+            />
+            <span class="badge badge-secondary absolute left-2.5 top-2.5 rounded-none font-mono text-[0.7rem] font-medium uppercase tracking-widest">до</span>
+          </div>
+          <div class="relative">
+            <img
+              src="/images/after/burger.jpg"
+              alt="Тот же бургер после обработки Манит — студийное фото"
+              class="aspect-[4/5] w-full rounded-sm object-cover shadow-frame-warm ring-2 ring-primary"
+              width="320"
+              height="400"
+              loading="eager"
+              fetchpriority="high"
+            />
+            <span class="badge badge-primary absolute left-2.5 top-2.5 rounded-none font-mono text-[0.7rem] font-medium uppercase tracking-widest">после</span>
           </div>
         </div>
-        <p class="mt-3 text-center text-xs text-base-content/50">Диалог иллюстративный</p>
-      </div>
+        <figcaption class="mt-3 text-center text-xs text-base-content/50">
+          Пример иллюстративный · то&nbsp;же блюдо
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -131,6 +114,7 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
     const box = document.getElementById('hero-logo-box');
     const slotText = document.getElementById('header-logo-text');
     const tagline = document.getElementById('hero-tagline');
+    const comma = document.getElementById('hero-comma');
     if (!logo || !box || !slotText) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -146,9 +130,11 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
     function update() {
       const y = window.scrollY;
       const p = Math.max(0, Math.min(1, y / dockAt));
-      // хвост слогана гаснет быстрее самого переезда — к середине пути он уже почти
-      // невидим, чтобы крупная строка «— но не обманывает» не висела в одиночестве
-      if (tagline) tagline.style.opacity = String(Math.max(0, 1 - p * 1.8));
+      // хвост слогана и запятая гаснут быстрее самого переезда — к середине пути они
+      // уже почти невидимы, чтобы крупная строка «но не обманывает» не висела одна
+      const tailOpacity = String(Math.max(0, 1 - p * 1.8));
+      if (tagline) tagline.style.opacity = tailOpacity;
+      if (comma) comma.style.opacity = tailOpacity;
       if (p >= 1) {
         // пристыкован: фиксируется точно на месте слова в хедере, рядом с иконкой
         logo!.classList.add('is-docked');
@@ -210,8 +196,9 @@ import { BOT_URL, CTA_LABEL } from '@/lib/site';
   #hero-logo.is-docked {
     position: fixed;
   }
-  /* хвост слогана переезжает вместе с фиксированной высотой строки — сглаживаем гашение */
-  #hero-tagline {
+  /* хвост слогана и запятая переезжают вместе с высотой строки — сглаживаем гашение */
+  #hero-tagline,
+  #hero-comma {
     transition: opacity 0.1s linear;
     will-change: opacity;
   }
