@@ -1,5 +1,5 @@
 ---
-import { CTA_LABEL } from '@/lib/site';
+import { BOT_URL, CTA_LABEL } from '@/lib/site';
 ---
 
 <!-- §0. Sticky-хедер: плоский, без теней, тонкая нижняя обводка (DESIGN §6) -->
@@ -21,7 +21,8 @@ import { CTA_LABEL } from '@/lib/site';
     <a href="#faq" class="btn btn-ghost btn-sm rounded-sm font-medium">Вопросы</a>
   </nav>
   <div class="flex-none pl-2">
-    <a href="#start" class="btn btn-primary btn-sm rounded-sm px-5 shadow-shutter">
+    <!-- CTA хедера открывает выбор площадки (Telegram/MAX); без JS — ссылка на Telegram -->
+    <a href={BOT_URL} data-open-bot target="_blank" rel="noopener" class="btn btn-primary btn-sm rounded-sm px-5 shadow-shutter">
       {CTA_LABEL}
     </a>
   </div>

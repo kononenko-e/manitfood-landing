@@ -1,18 +1,18 @@
 ---
-// Лендинг «Манит» — структура по manitfood-landing-structure.md:
-// расхождение (hero с парой до/после → как работает в 3 шага → развилка →
-// сегмент-зона) → схождение (конфигуратор → тарифы → FAQ → финальный CTA).
+// Лендинг «Манит» — воронка «боль → как решаем → цена → в бота»:
+// hero (боль + прямой CTA в бота) → развилка/сегмент-зона (боль по сегментам) →
+// «как работает сервис» в 3 шага → тарифы → FAQ → финальный CTA.
 import SeoJsonLd from '@/components/SeoJsonLd.astro';
 import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 import Hero from '@/components/Hero.astro';
-import Steps from '@/components/Steps.astro';
 import SegmentZone from '@/components/SegmentZone.astro';
-import HowItWorks from '@/components/HowItWorks.astro';
+import Steps from '@/components/Steps.astro';
 import Pricing from '@/components/Pricing.astro';
 import Faq from '@/components/Faq.astro';
 import CtaSection from '@/components/CtaSection.astro';
 import Footer from '@/components/Footer.astro';
+import BotModal from '@/components/BotModal.astro';
 import { BOT_URL, SITE_URL } from '@/lib/site';
 
 const organizationSchema = {
@@ -49,12 +49,12 @@ const productSchema = {
   <Header />
   <main>
     <Hero />
-    <Steps />
     <SegmentZone />
-    <HowItWorks />
+    <Steps />
     <Pricing />
     <Faq />
     <CtaSection />
   </main>
   <Footer />
+  <BotModal />
 </Layout>
