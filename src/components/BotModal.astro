@@ -1,0 +1,240 @@
+---
+// Модалка выбора площадки для CTA «Попробовать бесплатно».
+// Бот одинаковый в Telegram и MAX — пользователь выбирает свой мессенджер.
+// Нативный <dialog>: фокус-трап, Esc и inert-фон — из коробки. Триггеры —
+// любые элементы с [data-open-bot]; без JS они деградируют в ссылку на Telegram.
+import { TELEGRAM_URL, MAX_URL } from '@/lib/site';
+
+// MAX-бот ещё не создан: пустой MAX_URL → кнопка в состоянии «скоро».
+const maxReady = MAX_URL.length > 0;
+---
+
+<dialog id="bot-modal" class="bot-modal" aria-labelledby="bot-modal-title">
+  <div class="bot-modal__panel rounded-sm border border-base-300 bg-base-100 p-6 shadow-frame-warm md:p-7">
+    <button
+      type="button"
+      class="bot-modal__close"
+      data-close-modal
+      aria-label="Закрыть"
+    >
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+
+    <h2 id="bot-modal-title" class="pr-8 text-2xl font-semibold leading-tight tracking-tight">
+      Где открыть бота?
+    </h2>
+    <p class="mt-2 text-base-content/70">
+      Бот одинаковый в&nbsp;Telegram и&nbsp;MAX — выбери, чем пользуешься.
+      Первое фото бесплатно, без&nbsp;карты.
+    </p>
+
+    <div class="mt-6 grid gap-3">
+      <!-- Telegram -->
+      <a
+        href={TELEGRAM_URL}
+        target="_blank"
+        rel="noopener"
+        class="bot-option group"
+        autofocus
+      >
+        <span class="bot-option__icon" style="background:#2AABEE">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff" aria-hidden="true">
+            <path d="M23.11 3.79L19.5 20.84c-.25 1.21-.98 1.5-2 .94l-5.5-4.07-2.66 2.57c-.3.3-.55.56-1.13.56l.4-5.71 10.35-9.35c.45-.4-.1-.63-.7-.23L5.31 12.4l-5.65-1.76c-1.22-.38-1.24-1.22.26-1.82L21.5 1.66c1.03-.4 1.93.24 1.61 2.13z" />
+          </svg>
+        </span>
+        <span class="min-w-0">
+          <span class="block font-semibold">Telegram</span>
+          <span class="block text-sm text-base-content/60">Открыть бота в&nbsp;Telegram</span>
+        </span>
+        <svg class="bot-option__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </a>
+
+      <!-- MAX -->
+      {maxReady ? (
+        <a href={MAX_URL} target="_blank" rel="noopener" class="bot-option group">
+          <!-- TODO: заменить плейсхолдер-плитку на официальный логотип MAX -->
+          <span class="bot-option__icon bot-option__icon--max">M</span>
+          <span class="min-w-0">
+            <span class="block font-semibold">MAX</span>
+            <span class="block text-sm text-base-content/60">Открыть бота в&nbsp;MAX</span>
+          </span>
+          <svg class="bot-option__chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </a>
+      ) : (
+        <div class="bot-option bot-option--soon" aria-disabled="true">
+          <span class="bot-option__icon bot-option__icon--max">M</span>
+          <span class="min-w-0">
+            <span class="block font-semibold">MAX</span>
+            <span class="block text-sm text-base-content/60">Тот&nbsp;же бот в&nbsp;MAX</span>
+          </span>
+          <span class="bot-option__soon font-mono text-[0.7rem] font-semibold uppercase tracking-widest">скоро</span>
+        </div>
+      )}
+    </div>
+
+    <p class="mt-5 font-mono text-xs font-medium tracking-widest text-base-content/55">
+      первое фото — бесплатно · отмена в&nbsp;любой момент
+    </p>
+  </div>
+</dialog>
+
+<script>
+  function initBotModal() {
+    const dlg = document.getElementById('bot-modal');
+    if (!(dlg instanceof HTMLDialogElement) || typeof dlg.showModal !== 'function') return;
+
+    // Перехватываем клики по всем CTA — вместо перехода по href открываем выбор площадки.
+    document.querySelectorAll<HTMLElement>('[data-open-bot]').forEach((trigger) => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        dlg.showModal();
+      });
+    });
+
+    // Закрытие: по крестику и по клику вне панели (Esc обрабатывает сам <dialog>).
+    dlg.querySelectorAll<HTMLElement>('[data-close-modal]').forEach((btn) =>
+      btn.addEventListener('click', () => dlg.close()),
+    );
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg.close();
+    });
+  }
+
+  initBotModal();
+</script>
+
+<style>
+  /* Растягиваем сам <dialog> на вьюпорт, чтобы клик вне панели ловился и закрывал.
+     Панель центрируется внутри; фон-затемнение — на ::backdrop. */
+  .bot-modal {
+    padding: 0;
+    border: 0;
+    margin: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100dvh;
+    background: transparent;
+    overflow: hidden;
+  }
+  .bot-modal:not([open]) {
+    display: none;
+  }
+  .bot-modal[open] {
+    display: grid;
+    place-items: center;
+  }
+  .bot-modal::backdrop {
+    background: rgba(10, 10, 12, 0.62);
+    backdrop-filter: blur(2px);
+  }
+  .bot-modal__panel {
+    position: relative;
+    width: min(28rem, 92vw);
+  }
+
+  .bot-modal__close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.25rem;
+    color: oklch(var(--bc) / 0.55);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .bot-modal__close:hover {
+    background: oklch(var(--b2));
+    color: oklch(var(--bc));
+  }
+  .bot-modal__close:focus-visible {
+    outline: 2px solid oklch(var(--p));
+    outline-offset: 2px;
+  }
+
+  /* Строка выбора площадки — «плитка кадра»: прямоугольная, тонкая обводка,
+     hover подсвечивает лаймом (акцент-«метка»). */
+  .bot-option {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid oklch(var(--b3));
+    border-radius: 0.25rem;
+    background: oklch(var(--b1));
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.16s ease, background-color 0.16s ease, transform 0.16s ease;
+  }
+  a.bot-option:hover {
+    border-color: oklch(var(--p));
+    background: oklch(var(--b2));
+  }
+  a.bot-option:focus-visible {
+    outline: 2px solid oklch(var(--p));
+    outline-offset: 2px;
+  }
+  .bot-option__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-shrink: 0;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #fff;
+  }
+  .bot-option__icon--max {
+    /* Плейсхолдер-плитка MAX: сине-фиолетовый градиент + буквенный знак.
+       Заменить на официальный логотип, когда появится бренд-ассет. */
+    background: linear-gradient(140deg, #2A6BF2, #7A3CF0);
+  }
+  .bot-option__chevron {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: oklch(var(--bc) / 0.4);
+    transition: transform 0.16s ease, color 0.16s ease;
+  }
+  a.bot-option:hover .bot-option__chevron {
+    color: oklch(var(--p));
+    transform: translateX(2px);
+  }
+
+  /* MAX ещё не готов: приглушённая строка с меткой «скоро», не кликабельна. */
+  .bot-option--soon {
+    cursor: default;
+    opacity: 0.6;
+  }
+  .bot-option--soon .bot-option__icon--max {
+    filter: grayscale(0.4);
+  }
+  .bot-option__soon {
+    margin-left: auto;
+    flex-shrink: 0;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid oklch(var(--b3));
+    border-radius: 0.125rem;
+    color: oklch(var(--bc) / 0.6);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .bot-modal[open] .bot-modal__panel {
+      animation: bot-pop 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .bot-modal[open]::backdrop {
+      animation: bot-fade 0.22s ease;
+    }
+  }
+  @keyframes bot-pop {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes bot-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>

@@ -1,6 +1,15 @@
 // Сквозные константы лендинга
-export const BOT_URL = 'https://t.me/manitfood_bot';
 export const SITE_URL = 'https://manitfood.ru';
+
+// Две площадки одного и того же бота. CTA «Попробовать бесплатно» открывает
+// модалку выбора площадки (BotModal). Без JS кнопка деградирует в ссылку на Telegram.
+export const TELEGRAM_URL = 'https://t.me/manitfood_bot';
+// MAX-бот ещё не создан. Впиши сюда ссылку/handle, когда будет — кнопка MAX
+// в модалке активируется автоматически (пустая строка = состояние «скоро»).
+export const MAX_URL = '';
+
+// BOT_URL — дефолтная площадка (Telegram): fallback-ссылка на кнопках и sameAs в schema.
+export const BOT_URL = TELEGRAM_URL;
 
 // §6.1 структуры: одна формулировка для реального перехода в бота.
 // Внутренние якоря называются честно («Посмотреть как», «Смотреть тарифы»).
